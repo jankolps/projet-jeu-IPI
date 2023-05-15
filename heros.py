@@ -1,19 +1,18 @@
 import sys
+import time
 
 class heros:
     pass
 
 # Fonction de création du héros
-def createHeros(filename="herosDroite.txt", direction="droite", couleur=10, position=[5,5]):
+def createHeros(filename="heros.txt", direction="droite", couleur=10, position=[5,5]):
     myHeros = heros()
 
-    CorpsHeros = []
     with open(filename, "r") as file:
         corpsEntier = file.read()
     corpsLignes = corpsEntier.split("\n")
-    for lignes in corpsLignes:
-        for lettres in lignes:
-            
+    myHeros.corps = corpsLignes
+
     myHeros.direction = direction
     myHeros.couleur = couleur
     myHeros.position = position
@@ -33,40 +32,25 @@ def show(h):
     couleurPolice="\033[3"+str(c%7+1)+"m"
     sys.stdout.write(couleurPolice)
 
-    # Defintion du sens du héros
-    if h.direction == "droite":
-        filename = "herosDroite.txt"
-        with open(filename, "r") as file:
-            h.corps = file.read()
-    elif h.direction == "gauche":
-        filename = "herosDroite.txt"
-        with open(filename, "r") as file:
-            h.corps = file.read()
-    else:
-        pass
-
-    #sys.stdout.write("\033["+str(y)+";"+str(x)+"H")
-    #sys.stdout.write(h.corps)
-    print(h.corps[0])
+    for lignes in h.corps :
+        v = 0
+        for lettres in lignes :
+            if lettres != " ":
+                sys.stdout.write("\033[" + str(y) + ";" + str(x+v)+"H")
+            v += 1
+        y += 1
     return
 
-
 # Procédure de déplacement du héros
-def move(h, dt):
+def move(h):
     if h.direction == "gauche":
-
-        pass
-        # Aller a gauche
+        h.position[0] -= 1
     elif h.direction == "droite":
-        pass
-        # Aller a droite
+        h.position[0] += 1
     elif h.direction == "haut":
-        pass
-        # Faire un saut
-
-
-# Procédure
-
+        h.position[1] -= 1
+    elif h.direction == "bas":
+        h.position[1] += 1
 
 # ===== Getters =====
 def getDirection(h):
@@ -86,5 +70,9 @@ def setVies(h, newVies):
 
 if __name__ == "__main__":
     Unhero = createHeros()
-    print(Unhero.corps[0])
-    #show(Unhero)
+    show(Unhero)
+    """
+    time.sleep(2)
+    move(Unhero)
+    show(Unhero)
+    """
