@@ -27,7 +27,7 @@ def createHeros(filename="heros.txt", direction="droite", couleur=10, position=[
 # Procédure d'affichage du héros
 def show(h):
     # Definition de la position du hero
-    sys.stdout.write("\033[2J")
+    #sys.stdout.write("\033[2J")
     x = h.position[0]
     y = h.position[1]
 
@@ -50,15 +50,15 @@ def show(h):
     return
 
 # Procédure de déplacement du héros
-def move(h, Xmax, Ymax):
+def move(h, Xmax = 80, Ymax = 24):
     if h.direction == "gauche":
-        h.position[0] -= 1
+        h.position = [(h.position[0]-1)%Xmax, h.position[1]]
     elif h.direction == "droite":
-        h.position[0] += 1
+        h.position = [(h.position[0]+1)%Xmax, h.position[1]]
     elif h.direction == "haut":
-        h.position[1] -= 1
+        h.position = [h.position[0], (h.position[1]-1)%Ymax]
     elif h.direction == "bas":
-        h.position[1] += 1
+        h.position = [h.position[0], (h.position[1]+1)%Ymax]
 
 # ===== Getters =====
 def getDirection(h):
@@ -82,7 +82,4 @@ def setDirection(h, newDirection):
 
 if __name__ == "__main__":
     Unhero = createHeros()
-    show(Unhero)
-    time.sleep(2)
-    move(Unhero)
     show(Unhero)

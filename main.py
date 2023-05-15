@@ -18,7 +18,7 @@ import vies
 import collision
 
 # Procédure d'initalisation du jeu
-def init():
+def init(data):
     # Définition de la fenêtre de jeu
     data["Xmax"] = 80
     data["Ymax"] = 24
@@ -26,9 +26,9 @@ def init():
 
     # creation des éléments du jeu
     data["myTimeStep"]=0.2
-    data["Vies"] = vies.createVies()
+    #data["Vies"] = vies.createVies()
     data["Heros"] = heros.createHeros()
-    data["Arene"] = arene.createArene()
+    #data["Arene"] = arene.createArene()
 
     # Récupération du numéro du descripteur de fichier de l'entrée standard (ici zéro) / (0 = entrée standard, 1 = sortie standard, 2 = erreur standard)
     # Pour plus d'infos, lire : https://fr.wikipedia.org/wiki/Descripteur_de_fichier
@@ -105,12 +105,16 @@ def interact(data):
         # On test et compare ce caractère
         if c=='z':
             heros.setDirection(data["Heros"], "haut")
+            move(data)
         elif c=='s':
             heros.setDirection(data["Heros"], "bas")
+            move(data)
         elif c=='q':
             heros.setDirection(data["Heros"], "gauche")
+            move(data)
         elif c=='d':
             heros.setDirection(data["Heros"], "droite")
+            move(data)
     return
 
 # Procédure de gestion des collisions
@@ -160,6 +164,8 @@ def isInLife(data):
 def run(data):
     #Boucle de simulation
     while True :
+        interact(data)
+        show(data)
         #Faire la boucle de simu
         """
         interact(data)
@@ -174,4 +180,4 @@ def run(data):
 if __name__ == "__main__":
     data = {"Heros":None, "Arene":None, "Xmax":None, "Ymax":None,"Vies":None, "old_settings":None}
     init(data)
-    show(data)
+    run(data)
