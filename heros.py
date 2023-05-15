@@ -14,6 +14,7 @@ class heros:
 def createHeros(filename="heros.txt", direction="droite", couleur=10, position=[5,5]):
     myHeros = heros()
 
+    # Ouverture du fichier texte contenant l'ASCII art du héros et mise dans une liste de lignes
     with open(filename, "r") as file:
         corpsEntier = file.read()
     corpsLignes = corpsEntier.split("\n")
@@ -27,7 +28,6 @@ def createHeros(filename="heros.txt", direction="droite", couleur=10, position=[
 # Procédure d'affichage du héros
 def show(h):
     # Definition de la position du hero
-    #sys.stdout.write("\033[2J")
     x = h.position[0]
     y = h.position[1]
 

@@ -20,15 +20,15 @@ import collision
 # Procédure d'initalisation du jeu
 def init(data):
     # Définition de la fenêtre de jeu
-    data["Xmax"] = 80
-    data["Ymax"] = 24
+    data["Xmax"] = 150
+    data["Ymax"] = 30
     sys.stdout.write("\x1b[8;{hauteur};{largeur}t".format(hauteur=data["Ymax"], largeur=data["Xmax"]))
 
     # creation des éléments du jeu
     data["myTimeStep"]=0.2
     #data["Vies"] = vies.createVies()
     data["Heros"] = heros.createHeros()
-    #data["Arene"] = arene.createArene()
+    data["Arene"] = arene.createArene()
 
     # Récupération du numéro du descripteur de fichier de l'entrée standard (ici zéro) / (0 = entrée standard, 1 = sortie standard, 2 = erreur standard)
     # Pour plus d'infos, lire : https://fr.wikipedia.org/wiki/Descripteur_de_fichier
@@ -72,6 +72,7 @@ def show(data):
     #vies.show(data['Vies'], data['Xmax'])
     #arene.show(data["Arene"])
     heros.show(data["Heros"])
+    arene.show(data["Arene"])
     """
     Restauration des couleurs du terminal
     Polices en blanc : code 37
