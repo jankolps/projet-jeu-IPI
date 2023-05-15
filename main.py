@@ -69,8 +69,8 @@ def show(data):
     
     #On affiche les différents elements
 
-    vies.show(data['Vies'], data['Xmax'])
-    arene.show(data["Arene"])
+    #vies.show(data['Vies'], data['Xmax'])
+    #arene.show(data["Arene"])
     heros.show(data["Heros"])
     """
     Restauration des couleurs du terminal
@@ -173,3 +173,5 @@ def run(data):
 # jeu de tests
 if __name__ == "__main__":
     data = {"Heros":None, "Arene":None, "Xmax":None, "Ymax":None,"Vies":None, "old_settings":None}
+    init(data)
+    show(data)
