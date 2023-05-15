@@ -21,6 +21,7 @@ def createHeros(filename="heros.txt", direction="droite", couleur=10, position=[
 # Procédure d'affichage du héros
 def show(h):
     # Definition de la position du hero
+    sys.stdout.write("\033[2J")
     x = h.position[0]
     y = h.position[1]
 
@@ -34,9 +35,10 @@ def show(h):
 
     for lignes in h.corps :
         v = 0
-        for lettres in lignes :
-            if lettres != " ":
+        for lettre in lignes :
+            if lettre != " ":
                 sys.stdout.write("\033[" + str(y) + ";" + str(x+v)+"H")
+                sys.stdout.write(lettre)
             v += 1
         y += 1
     return
@@ -71,8 +73,6 @@ def setVies(h, newVies):
 if __name__ == "__main__":
     Unhero = createHeros()
     show(Unhero)
-    """
     time.sleep(2)
     move(Unhero)
     show(Unhero)
-    """
