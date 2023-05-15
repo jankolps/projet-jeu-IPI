@@ -16,6 +16,7 @@ import heros
 import arene
 import vies
 import collision
+import boule_de_feu
 
 # Procédure d'initalisation du jeu
 def init(data):
@@ -26,6 +27,7 @@ def init(data):
 
     # creation des éléments du jeu
     data["myTimeStep"]=0.2
+    data["Boules_de_feu"]={}
     #data["Vies"] = vies.createVies()
     data["Heros"] = heros.createHeros()
     data["Arene"] = arene.createArene()
@@ -49,11 +51,6 @@ def init(data):
     tty.setcbreak(fd)
     return
 
-# Procédure de déplacement
-def move(data):
-    heros.move(data["Heros"], data["Xmax"], data["Ymax"])
-    return
-
 # Procédure d'affichage
 def show(data):
     """
@@ -71,8 +68,12 @@ def show(data):
 
     #vies.show(data['Vies'], data['Xmax'])
     #arene.show(data["Arene"])
+    sys.stdout.write(str(data["Boules_de_feu"]))
     heros.show(data["Heros"])
     arene.show(data["Arene"])
+    if data["Boules_de_feu"] != {}:
+        for My_boule_de_feu in data["Boules_de_feu"]:
+            boule_de_feu.move(data["Boules_de_feu"][My_boule_de_feu])
     """
     Restauration des couleurs du terminal
     Polices en blanc : code 37
@@ -87,6 +88,13 @@ def show(data):
     deplacement curseur
     """
     sys.stdout.write("\033[0;0H\n")
+    return
+
+# Procédure de déplacement
+def move(data):
+    if data["Boules_de_feu"] != {}:
+        for My_boule_de_feu in data["Boules_de_feu"]:
+            boule_de_feu.move(data["Boules_de_feu"][My_boule_de_feu])
     return
 
 # Fonction permettant de tester si un caractère (touche clavier) est disponible
@@ -106,16 +114,18 @@ def interact(data):
         # On test et compare ce caractère
         if c=='z':
             heros.setDirection(data["Heros"], "haut")
-            move(data)
+            heros.move(data["Heros"], data["Xmax"], data["Ymax"])
         elif c=='s':
             heros.setDirection(data["Heros"], "bas")
-            move(data)
+            heros.move(data["Heros"], data["Xmax"], data["Ymax"])
         elif c=='q':
             heros.setDirection(data["Heros"], "gauche")
-            move(data)
+            heros.move(data["Heros"], data["Xmax"], data["Ymax"])
         elif c=='d':
             heros.setDirection(data["Heros"], "droite")
-            move(data)
+            heros.move(data["Heros"], data["Xmax"], data["Ymax"])
+        elif c=='a':
+            data["Boules_de_feu"]["Boule_de_feu_"+str(len(["Boules_de_feu"])+1)] = boule_de_feu.createBoule_de_feu(position=(heros.getPosition(data["Heros"])).copy(), direction=heros.getDirection(data["Heros"]))
     return
 
 # Procédure de gestion des collisions
@@ -124,8 +134,8 @@ def isCollision(data):
         # Ici il faut gérer la collision entre le joueur et l'arène
         pass
 
-    if not collision.isInBox(data['Heros'], data['Xmax'], data['Ymax']):
-        # Gérer si le joueur sort de la zone de jeu
+    if not collision.isInBox(data['Boules_de_feu'], data['Xmax'], data['Ymax']):
+        # Gérer si les boules sortent de la zone de jeu
         pass
     return
 
@@ -166,7 +176,9 @@ def run(data):
     #Boucle de simulation
     while True :
         interact(data)
+        move(data)
         show(data)
+        time.sleep(data["myTimeStep"])
         #Faire la boucle de simu
         """
         interact(data)

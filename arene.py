@@ -12,7 +12,7 @@ class arene:
     pass
 
 # Fonction de creation de l'arène
-def createArene(filename = "arene.txt", position = [0, 0], couleur = 5):
+def createArene(filename = "arene.txt", position = [50, 24], couleur = 5):
     myArene = arene()
 
     # Ouverture du fichier texte contenant l'ASCII art de l'arène et mise dans une liste de lignes

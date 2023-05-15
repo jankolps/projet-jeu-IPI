@@ -4,6 +4,7 @@
 # -*-   J. Lepers    -*-
 # -*-       IPI      -*-
 
+# import de librairies python
 import sys
 import time
 
@@ -66,6 +67,9 @@ def getDirection(h):
 
 def getVies(h):
     return h.vies
+
+def getPosition(h):
+    return h.position
 
 # ===== Setters =====
 def setCorps(h, newCorps):

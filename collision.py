@@ -4,8 +4,12 @@
 # -*-   J. Lepers    -*-
 # -*-       IPI      -*-
 
-def isCollision_joueur_arene(h, a):
-    return
+# import de modules créés
+import heros
+import arene
 
-def isInBox(h, Xmax, Ymax):
+# fonction de test de collision entre le joueur et l'arène, renvoi True si collision
+def isCollision_joueur_arene(h, a):
+    
+
     return
