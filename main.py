@@ -49,12 +49,12 @@ def init():
     tty.setcbreak(fd)
     return
 
-# ===== Procédure de déplacement =====
+# Procédure de déplacement
 def move(data):
     heros.move(data["Heros"], data["Xmax"], data["Ymax"])
     return
 
-# ===== Procédure d'affichage =====
+# Procédure d'affichage
 def show(data):
     """
     rafraichissement de l'affichage
@@ -88,7 +88,7 @@ def show(data):
     sys.stdout.write("\033[0;0H\n")
     return
 
-# ===== Fonction permettant de tester si un caractère (touche clavier) est disponible =====
+# Fonction permettant de tester si un caractère (touche clavier) est disponible
 def isDataReady():
     """
     On teste si un caractère est immédiatement disponible au clavier (non bloquant)
@@ -113,7 +113,7 @@ def interact(data):
             heros.setDirection(data["Heros"], "droite")
     return
 
-# ===== Procédure de gestion des collisions =====
+# Procédure de gestion des collisions
 def isCollision(data):
     if collision.isCollision_joueur_arene(data["Heros"], data["Arene"]):
         # Ici il faut gérer la collision entre le joueur et l'arène
@@ -124,7 +124,51 @@ def isCollision(data):
         pass
     return
 
+# Procédure pour quitter de jeu
+def quitGame(data):
+    """
+    Restauration des couleurs du terminal
+    Polices en blanc : code 37
+    """
+    sys.stdout.write("\033[37m")
 
+    """
+    background en noir : code 40
+    """
+    sys.stdout.write("\033[40m")
+    
+    """
+    rafraichissement de l'affichage
+    """
+    sys.stdout.write("\033[2J")
+
+    """
+    Restauration du flux STDIN comme il était au début (on l'a sauvegardé au préalable)
+    """
+    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, data['old_settings'])
+    sys.exit()
+    return
+
+# Procédure de gestion des vies
+def isInLife(data):
+    if vies.getNbrVies(data["Vies"]) == 0:
+        # Ici on doit faire perdre / gagner un joueur
+        pass
+    return
+
+# Procédure de lancement du jeu
+def run(data):
+    #Boucle de simulation
+    while True :
+        #Faire la boucle de simu
+        """
+        interact(data)
+        move(data)
+        show(data)
+        isCollision(data)
+        isInLife(data)
+        time.sleep(data['myTimeStep'])
+        """
 
 # jeu de tests
 if __name__ == "__main__":
