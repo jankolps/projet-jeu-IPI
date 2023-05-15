@@ -50,7 +50,7 @@ def show(h):
     return
 
 # Procédure de déplacement du héros
-def move(h):
+def move(h, Xmax, Ymax):
     if h.direction == "gauche":
         h.position[0] -= 1
     elif h.direction == "droite":
@@ -68,12 +68,16 @@ def getVies(h):
     return h.vies
 
 # ===== Setters =====
-def setCorps(h, newcorps):
-    h.corps = newcorps
+def setCorps(h, newCorps):
+    h.corps = newCorps
     return
 
 def setVies(h, newVies):
     h.vies = newVies
+    return
+
+def setDirection(h, newDirection):
+    h.direction = newDirection
     return
 
 if __name__ == "__main__":
