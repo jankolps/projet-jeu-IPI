@@ -129,6 +129,7 @@ def interact(data):
             # centrage au milieu du héros
             myBoulePosition[0] += 4
             myBoulePosition[1] += 2
+            myNombreDeBoules = len(["Boules_de_feu"])
             myBouleDirection = heros.getDirection(data["Heros"])
             data["Boules_de_feu"]["Boule_de_feu_"+str(len(["Boules_de_feu"])+1)] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, myBouleDirection,10)
     return
