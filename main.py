@@ -68,12 +68,12 @@ def show(data):
 
     #vies.show(data['Vies'], data['Xmax'])
     #arene.show(data["Arene"])
-    sys.stdout.write(str(data["Boules_de_feu"]))
+    sys.stdout.write(str(data))
     heros.show(data["Heros"])
     arene.show(data["Arene"])
     if data["Boules_de_feu"] != {}:
         for My_boule_de_feu in data["Boules_de_feu"]:
-            boule_de_feu.move(data["Boules_de_feu"][My_boule_de_feu])
+            boule_de_feu.show(data["Boules_de_feu"][My_boule_de_feu])
     """
     Restauration des couleurs du terminal
     Polices en blanc : code 37
@@ -125,7 +125,12 @@ def interact(data):
             heros.setDirection(data["Heros"], "droite")
             heros.move(data["Heros"], data["Xmax"], data["Ymax"])
         elif c=='a':
-            data["Boules_de_feu"]["Boule_de_feu_"+str(len(["Boules_de_feu"])+1)] = boule_de_feu.createBoule_de_feu(position=(heros.getPosition(data["Heros"])).copy(), direction=heros.getDirection(data["Heros"]))
+            myBoulePosition = (heros.getPosition(data["Heros"])).copy()
+            # centrage au milieu du héros
+            myBoulePosition[0] += 4
+            myBoulePosition[1] += 2
+            myBouleDirection = heros.getDirection(data["Heros"])
+            data["Boules_de_feu"]["Boule_de_feu_"+str(len(["Boules_de_feu"])+1)] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, myBouleDirection,10)
     return
 
 # Procédure de gestion des collisions
