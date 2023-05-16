@@ -28,6 +28,7 @@ def init(data):
     # creation des éléments du jeu
     data["myTimeStep"]=0.1
     data["Boules_de_feu"]={}
+    data["NumeroBouleDeFeu"] = 0
     #data["Vies"] = vies.createVies()
     data["Heros"] = heros.createHeros()
     data["Arene"] = arene.createArene()
@@ -125,13 +126,13 @@ def interact(data):
             heros.setDirection(data["Heros"], "droite")
             heros.move(data["Heros"], data["Xmax"], data["Ymax"])
         elif c=='a':
+            data["NumeroBouleDeFeu"] += 1
             myBoulePosition = (heros.getPosition(data["Heros"])).copy()
             # centrage au milieu du héros
             myBoulePosition[0] += 4
             myBoulePosition[1] += 2
-            myNombreDeBoules = len(["Boules_de_feu"])
             myBouleDirection = heros.getDirection(data["Heros"])
-            data["Boules_de_feu"]["Boule_de_feu_"+str(len(["Boules_de_feu"])+1)] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, myBouleDirection,10)
+            data["Boules_de_feu"]["Boule_de_feu_"+str(data["NumeroBouleDeFeu"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, myBouleDirection,10)
     return
 
 # Procédure de gestion des collisions

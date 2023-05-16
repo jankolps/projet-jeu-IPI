@@ -42,6 +42,10 @@ def show(b):
 def move(b):
     if b.direction == "gauche":
         b.position[0] -= 1
-    if b.direction == "droite":
+    elif b.direction == "droite":
         b.position[0] += 1
+    elif b.direction == "haut":
+        b.position[1] -= 1
+    elif b.direction == "bas":
+        b.position[1] += 1
     return
