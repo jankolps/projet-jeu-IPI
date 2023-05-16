@@ -13,3 +13,13 @@ def isCollision_joueur_arene(h, a):
     
 
     return
+
+# Fonction pour savoir si une boule est sortie de la zone de jeu
+def isInBox(b, Xmax, Ymax):
+    if b.position[0] >= Xmax or b.position[0] <= 0:
+        myIsInBox = False
+    elif b.position[1] >= Ymax or b.position[1] <= 0:
+        myIsInBox = False
+    else:
+        myIsInBox = True
+    return myIsInBox

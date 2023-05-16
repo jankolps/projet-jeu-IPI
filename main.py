@@ -26,7 +26,7 @@ def init(data):
     sys.stdout.write("\x1b[8;{hauteur};{largeur}t".format(hauteur=data["Ymax"], largeur=data["Xmax"]))
 
     # creation des éléments du jeu
-    data["myTimeStep"]=0.2
+    data["myTimeStep"]=0.1
     data["Boules_de_feu"]={}
     #data["Vies"] = vies.createVies()
     data["Heros"] = heros.createHeros()
@@ -139,9 +139,10 @@ def isCollision(data):
         # Ici il faut gérer la collision entre le joueur et l'arène
         pass
 
-    if not collision.isInBox(data['Boules_de_feu'], data['Xmax'], data['Ymax']):
-        # Gérer si les boules sortent de la zone de jeu
-        pass
+    # Si la boule de feu sort de la zone de jeu, on supprime la boule de feu
+    for MyBouleDeFeu in (data["Boules_de_feu"]).copy() :
+        if not collision.isInBox(data['Boules_de_feu'][MyBouleDeFeu], data['Xmax'], data['Ymax']):
+            del data["Boules_de_feu"][MyBouleDeFeu]
     return
 
 # Procédure pour quitter de jeu
@@ -183,6 +184,7 @@ def run(data):
         interact(data)
         move(data)
         show(data)
+        isCollision(data)
         time.sleep(data["myTimeStep"])
         #Faire la boucle de simu
         """
