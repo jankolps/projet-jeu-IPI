@@ -39,18 +39,29 @@ def show(a):
     couleurPolice="\033[3"+str(c%7+1)+"m"
     sys.stdout.write(couleurPolice)
 
-    hitbox = []
-
     for lignes in a.corps :
         v = 0
         for lettre in lignes :
             if lettre != " ":
                 sys.stdout.write("\033[" + str(y) + ";" + str(x+v)+"H")
-                hitbox.append([y, x+v])
                 sys.stdout.write(lettre)
             v += 1
         y += 1
+    return
+
+def getHitBox(a):
+    x = a.position[0]
+    y = a.position[1]
+    hitbox = []
+    for lignes in a.corps :
+        v = 0
+        for lettre in lignes :
+            if lettre != " ":
+                hitbox.append([y, x+v])
+            v += 1
+        y += 1
     return hitbox
+
 
 # jeu de tests
 if __name__ == "__main__":

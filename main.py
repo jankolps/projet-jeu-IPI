@@ -71,8 +71,8 @@ def show(data):
     #vies.show(data['Vies'], data['Xmax'])
     #arene.show(data["Arene"])
     #sys.stdout.write(str(data))
-    data["HerosHitBox"] = heros.show(data["Heros"])
-    data["AreneHitBox"] = arene.show(data["Arene"])
+    heros.show(data["Heros"])
+    arene.show(data["Arene"])
     if data["Boules_de_feu"] != {}:
         for My_boule_de_feu in data["Boules_de_feu"]:
             boule_de_feu.show(data["Boules_de_feu"][My_boule_de_feu])
@@ -97,6 +97,7 @@ def move(data):
     if data["Boules_de_feu"] != {}:
         for My_boule_de_feu in data["Boules_de_feu"]:
             boule_de_feu.move(data["Boules_de_feu"][My_boule_de_feu])
+    heros.Newton(data["Heros"], data["myTimeStep"])
     return
 
 # Fonction permettant de tester si un caractère (touche clavier) est disponible
@@ -111,34 +112,35 @@ def interact(data):
     Si une touche est appuyée (si un caractère est récupéré dans le fichier de l'entrée standard)
     """
     if isDataReady():
-        # On lit ce caractère
-        c = sys.stdin.read(1)
+        keys=[]
+        while isDataReady():
+            # On lit ce caractère
+            keys.append(sys.stdin.read(1))
         # On test et compare ce caractère
-        if c=='z':
-            heros.setDirection(data["Heros"], "haut")
-            heros.move(data["Heros"], data["Xmax"], data["Ymax"])
-        elif c=='s':
+        if 'z' in keys:
+            heros.jump(data["Heros"])
+        elif 's' in keys:
             heros.setDirection(data["Heros"], "bas")
             heros.move(data["Heros"], data["Xmax"], data["Ymax"])
-        elif c=='q':
+        elif 'q' in keys:
             heros.setDirection(data["Heros"], "gauche")
             heros.move(data["Heros"], data["Xmax"], data["Ymax"])
-        elif c=='d':
+        elif 'd' in keys:
             heros.setDirection(data["Heros"], "droite")
             heros.move(data["Heros"], data["Xmax"], data["Ymax"])
-        elif c=='a':
+        elif 'a' in keys:
             data["NumeroBouleDeFeu"] += 1
             myBoulePosition = (heros.getPosition(data["Heros"])).copy()
             # centrage au milieu du héros
-            myBoulePosition[0] += 4
-            myBoulePosition[1] += 2
+            myBoulePosition[0] = int(myBoulePosition[0])+4
+            myBoulePosition[1] = int(myBoulePosition[1])+2
             myBouleDirection = heros.getDirection(data["Heros"])
             data["Boules_de_feu"]["Boule_de_feu_"+str(data["NumeroBouleDeFeu"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, myBouleDirection,10)
     return
 
 # Procédure de gestion des collisions
 def isCollision(data):
-    if collision.isCollision_joueur_arene(data["HerosHitBox"], data["AreneHitBox"]):
+    if collision.isCollision_joueur_arene(heros.getHitBox(data["Heros"]), arene.getHitBox(data["Arene"])):
         if data["Heros"].direction == "haut" :
             data["Heros"].direction = "bas"
             heros.move(data["Heros"])
@@ -194,11 +196,11 @@ def isInLife(data):
 # Procédure de lancement du jeu
 def run(data):
     #Boucle de simulation
-    while True : # isCollision impérartivement après show
+    while True :
         interact(data)
         move(data)
-        show(data)
         isCollision(data)
+        show(data)
         time.sleep(data["myTimeStep"])
         #Faire la boucle de simu
         """

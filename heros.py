@@ -12,7 +12,7 @@ class heros:
     pass
 
 # Fonction de création du héros
-def createHeros(filename="heros.txt", direction="droite", couleur=10, position=[5,5]):
+def createHeros(filename="heros.txt", direction="droite", couleur=10, position=[50,5], vitesse=[0,0], acceleration = [0, -10]):
     myHeros = heros()
 
     # Ouverture du fichier texte contenant l'ASCII art du héros et mise dans une liste de lignes
@@ -24,13 +24,15 @@ def createHeros(filename="heros.txt", direction="droite", couleur=10, position=[
     myHeros.direction = direction
     myHeros.couleur = couleur
     myHeros.position = position
+    myHeros.vitesse = vitesse
+    myHeros.acceleration = acceleration
     return myHeros
 
 # Procédure d'affichage du héros
 def show(h):
     # Definition de la position du hero
-    x = h.position[0]
-    y = h.position[1]
+    x = int(h.position[0])
+    y = int(h.position[1])
 
     # Couleur noire pour le fond
     sys.stdout.write("\033[40m")
@@ -40,18 +42,15 @@ def show(h):
     couleurPolice="\033[3"+str(c%7+1)+"m"
     sys.stdout.write(couleurPolice)
 
-    hitbox = []
-
     for lignes in h.corps :
         v = 0
         for lettre in lignes :
             if lettre != " ":
                 sys.stdout.write("\033[" + str(y) + ";" + str(x+v)+"H")
-                hitbox.append([y, x+v])
                 sys.stdout.write(lettre)
             v += 1
         y += 1
-    return hitbox
+    return
 
 # Procédure de déplacement du héros
 def move(h, Xmax = 150, Ymax = 30):
@@ -59,12 +58,33 @@ def move(h, Xmax = 150, Ymax = 30):
         h.position = [(h.position[0]-1)%Xmax, h.position[1]]
     elif h.direction == "droite":
         h.position = [(h.position[0]+1)%Xmax, h.position[1]]
-    elif h.direction == "haut":
-        h.position = [h.position[0], (h.position[1]-1)%Ymax]
-    elif h.direction == "bas":
-        h.position = [h.position[0], (h.position[1]+1)%Ymax]
+    return
+
+# Procédure de saut
+def jump(h):
+    h.vitesse[1] = 10
+
+# Fonction de gravité
+def Newton(h, dt):
+    h.vitesse[1] += dt*(h.acceleration[1])
+    h.position[1] -= dt*(h.vitesse[1])
+    return
 
 # ===== Getters =====
+def getHitBox(h):
+    x = h.position[0]
+    y = h.position[1]
+    hitbox = []
+    for lignes in h.corps :
+        v = 0
+        for lettre in lignes :
+            if lettre != " ":
+                hitbox.append([y, x+v])
+            v += 1
+        y += 1
+    return hitbox
+
+
 def getDirection(h):
     return h.direction
 
