@@ -17,7 +17,6 @@ def isCollision_joueur_arene(HitboxHeros, HitboxArene):
                 break
             else:
                 isCollision = False
-
     return isCollision
 
 # Fonction pour savoir si une boule est sortie de la zone de jeu
