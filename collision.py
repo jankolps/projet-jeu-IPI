@@ -9,10 +9,16 @@ import heros
 import arene
 
 # fonction de test de collision entre le joueur et l'arène, renvoi True si collision
-def isCollision_joueur_arene(h, a):
-    
+def isCollision_joueur_arene(HitboxHeros, HitboxArene):
+    for coordonneesHeros in HitboxHeros :
+        for coordonneesArene in HitboxArene :
+            if coordonneesArene == coordonneesHeros:
+                isCollision = True
+                break
+            else:
+                isCollision = False
 
-    return
+    return isCollision
 
 # Fonction pour savoir si une boule est sortie de la zone de jeu
 def isInBox(b, Xmax, Ymax):

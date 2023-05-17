@@ -69,9 +69,9 @@ def show(data):
 
     #vies.show(data['Vies'], data['Xmax'])
     #arene.show(data["Arene"])
-    sys.stdout.write(str(data))
-    heros.show(data["Heros"])
-    arene.show(data["Arene"])
+    #sys.stdout.write(str(data))
+    data["HerosHitBox"] = heros.show(data["Heros"])
+    data["AreneHitBox"] = arene.show(data["Arene"])
     if data["Boules_de_feu"] != {}:
         for My_boule_de_feu in data["Boules_de_feu"]:
             boule_de_feu.show(data["Boules_de_feu"][My_boule_de_feu])
@@ -137,8 +137,19 @@ def interact(data):
 
 # Procédure de gestion des collisions
 def isCollision(data):
-    if collision.isCollision_joueur_arene(data["Heros"], data["Arene"]):
-        # Ici il faut gérer la collision entre le joueur et l'arène
+    if collision.isCollision_joueur_arene(data["HerosHitBox"], data["AreneHitBox"]):
+        if data["Heros"].direction == "haut" :
+            data["Heros"].direction = "bas"
+            heros.move(data["Heros"])
+        elif data["Heros"].direction == "bas" :
+            data["Heros"].direction = "haut"
+            heros.move(data["Heros"])
+        elif data["Heros"].direction == "gauche" :
+            data["Heros"].direction = "droite"
+            heros.move(data["Heros"])
+        elif data["Heros"].direction == "droite" :
+            data["Heros"].direction = "gauche"
+            heros.move(data["Heros"])
         pass
 
     # Si la boule de feu sort de la zone de jeu, on supprime la boule de feu
@@ -182,7 +193,7 @@ def isInLife(data):
 # Procédure de lancement du jeu
 def run(data):
     #Boucle de simulation
-    while True :
+    while True : # isCollision impérartivement après show
         interact(data)
         move(data)
         show(data)

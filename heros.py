@@ -40,18 +40,21 @@ def show(h):
     couleurPolice="\033[3"+str(c%7+1)+"m"
     sys.stdout.write(couleurPolice)
 
+    hitbox = []
+
     for lignes in h.corps :
         v = 0
         for lettre in lignes :
             if lettre != " ":
                 sys.stdout.write("\033[" + str(y) + ";" + str(x+v)+"H")
+                hitbox.append([y, x+v])
                 sys.stdout.write(lettre)
             v += 1
         y += 1
-    return
+    return hitbox
 
 # Procédure de déplacement du héros
-def move(h, Xmax = 80, Ymax = 24):
+def move(h, Xmax = 150, Ymax = 30):
     if h.direction == "gauche":
         h.position = [(h.position[0]-1)%Xmax, h.position[1]]
     elif h.direction == "droite":
