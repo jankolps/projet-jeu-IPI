@@ -18,6 +18,7 @@ import arene
 import vies
 import collision
 import boule_de_feu
+import dev_tools
 
 # Procédure d'initalisation du jeu
 def init(data):
@@ -71,8 +72,14 @@ def show(data):
     #vies.show(data['Vies'], data['Xmax'])
     #arene.show(data["Arene"])
     #sys.stdout.write(str(data))
+    dev_tools.showVariable("Collision", str(collision.Collision_joueur_arene(data["Heros"], data["Arene"])))
+    #dev_tools.showVariable("Hitbox Arene : ", str(arene.getHitBox(data["Arene"])))
+    #hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas = heros.getHitBox(data["Heros"])
+    #dev_tools.showVariable("Hitbox Heros : ", str(hitboxVerticBas))
+
     heros.show(data["Heros"])
     arene.show(data["Arene"])
+
     if data["Boules_de_feu"] != {}:
         for My_boule_de_feu in data["Boules_de_feu"]:
             boule_de_feu.show(data["Boules_de_feu"][My_boule_de_feu])
@@ -94,10 +101,13 @@ def show(data):
 
 # Procédure de déplacement
 def move(data):
+    # faire bouger les boules de feu
     if data["Boules_de_feu"] != {}:
         for My_boule_de_feu in data["Boules_de_feu"]:
             boule_de_feu.move(data["Boules_de_feu"][My_boule_de_feu])
-    heros.Newton(data["Heros"], data["myTimeStep"])
+    
+    # faire bouger le heros
+    heros.move(data["Heros"], data["myTimeStep"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
     return
 
 # Fonction permettant de tester si un caractère (touche clavier) est disponible
@@ -118,16 +128,17 @@ def interact(data):
             keys.append(sys.stdin.read(1))
         # On test et compare ce caractère
         if 'z' in keys:
-            heros.jump(data["Heros"])
+            heros.setDirection(data["Heros"], "haut")
+            heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
         elif 's' in keys:
             heros.setDirection(data["Heros"], "bas")
-            heros.move(data["Heros"], data["Xmax"], data["Ymax"])
+            heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
         elif 'q' in keys:
             heros.setDirection(data["Heros"], "gauche")
-            heros.move(data["Heros"], data["Xmax"], data["Ymax"])
+            heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
         elif 'd' in keys:
             heros.setDirection(data["Heros"], "droite")
-            heros.move(data["Heros"], data["Xmax"], data["Ymax"])
+            heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
         elif 'a' in keys:
             data["NumeroBouleDeFeu"] += 1
             myBoulePosition = (heros.getPosition(data["Heros"])).copy()
@@ -140,21 +151,6 @@ def interact(data):
 
 # Procédure de gestion des collisions
 def isCollision(data):
-    if collision.isCollision_joueur_arene(heros.getHitBox(data["Heros"]), arene.getHitBox(data["Arene"])):
-        if data["Heros"].direction == "haut" :
-            data["Heros"].direction = "bas"
-            heros.move(data["Heros"])
-        elif data["Heros"].direction == "bas" :
-            data["Heros"].direction = "haut"
-            heros.move(data["Heros"])
-        elif data["Heros"].direction == "gauche" :
-            data["Heros"].direction = "droite"
-            heros.move(data["Heros"])
-        elif data["Heros"].direction == "droite" :
-            data["Heros"].direction = "gauche"
-            heros.move(data["Heros"])
-        pass
-
     # Si la boule de feu sort de la zone de jeu, on supprime la boule de feu
     for MyBouleDeFeu in (data["Boules_de_feu"]).copy() :
         if not collision.isInBox(data['Boules_de_feu'][MyBouleDeFeu], data['Xmax'], data['Ymax']):
@@ -202,15 +198,6 @@ def run(data):
         isCollision(data)
         show(data)
         time.sleep(data["myTimeStep"])
-        #Faire la boucle de simu
-        """
-        interact(data)
-        move(data)
-        show(data)
-        isCollision(data)
-        isInLife(data)
-        time.sleep(data['myTimeStep'])
-        """
 
 # jeu de tests
 if __name__ == "__main__":

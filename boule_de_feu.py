@@ -39,13 +39,13 @@ def show(b):
     return
 
 # Procédure de déplacement de la boule de feu
-def move(b):
+def move(b, pas = 3):
     if b.direction == "gauche":
-        b.position[0] -= 1
+        b.position[0] -= pas
     elif b.direction == "droite":
-        b.position[0] += 1
+        b.position[0] += pas
     elif b.direction == "haut":
-        b.position[1] -= 1
+        b.position[1] -= pas
     elif b.direction == "bas":
-        b.position[1] += 1
+        b.position[1] += pas
     return

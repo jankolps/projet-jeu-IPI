@@ -28,8 +28,8 @@ def createArene(filename = "arene.txt", position = [50, 24], couleur = 5):
 # Fonction d'affichage de l'arene
 def show(a):
     # Definition de la position de l'arene
-    x = a.position[0]
-    y = a.position[1]
+    x = int(a.position[0])
+    y = int(a.position[1])
 
     # Couleur noire pour le fond
     sys.stdout.write("\033[40m")
@@ -50,18 +50,18 @@ def show(a):
     return
 
 def getHitBox(a):
-    x = a.position[0]
-    y = a.position[1]
+    x = int(a.position[0])
+    y = int(a.position[1])
     hitbox = []
+
     for lignes in a.corps :
         v = 0
         for lettre in lignes :
             if lettre != " ":
-                hitbox.append([y, x+v])
+                hitbox.append([x+v, y])
             v += 1
         y += 1
     return hitbox
-
 
 # jeu de tests
 if __name__ == "__main__":
