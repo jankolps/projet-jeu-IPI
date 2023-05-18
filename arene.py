@@ -7,7 +7,6 @@
 # import de librairies python
 import sys
 
-
 class arene:
     pass
 
@@ -49,6 +48,7 @@ def show(a):
         y += 1
     return
 
+# Fonction pour connaître les coordonnées de l'arène
 def getHitBox(a):
     x = int(a.position[0])
     y = int(a.position[1])

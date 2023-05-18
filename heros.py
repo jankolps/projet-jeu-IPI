@@ -6,7 +6,6 @@
 
 # import de librairies python
 import sys
-import time
 
 class heros:
     pass
@@ -42,6 +41,7 @@ def show(h):
     couleurPolice="\033[3"+str(c%7+1)+"m"
     sys.stdout.write(couleurPolice)
 
+    # Affichage du corps du héros caratère par caractère en négligeant les " "
     for lignes in h.corps :
         v = 0
         for lettre in lignes :
@@ -52,7 +52,7 @@ def show(h):
         y += 1
     return
 
-# Procédure de réglace de la vitesse du héros
+# Procédure de réglage de la vitesse du héros
 def setVelocity(h, collision):
     if h.direction == None:
         h.vitesse[0] = 0
@@ -66,7 +66,7 @@ def setVelocity(h, collision):
         h.vitesse[1] = -5
     return
 
-# Fonction décélération
+# Procédure de déplacement du héros
 def move(h, dt, collision):
     # déplacement gauche
     if h.direction == "gauche" and collision != "gauche":
@@ -104,15 +104,16 @@ def move(h, dt, collision):
 def getHitBox(h):
     x = int(h.position[0])
     y = int(h.position[1])
-    hitbox = []
+    #hitbox = []
     coordonneesMin = [x, y]
     coordonneesMax = [x, y]
     
+    # Pareil que pour l'affichage, sauf qu'ici on veut déterminer la hitbox carrée du Héros donc Xmin/max et Ymin/max
     for lignes in h.corps :
         v = 0
         for lettre in lignes :
             if lettre != " ":
-                hitbox.append([x+v, y])
+                #hitbox.append([x+v, y])
                 if coordonneesMax[0] < x+v:
                     coordonneesMax[0] = x+v
                 
@@ -121,6 +122,7 @@ def getHitBox(h):
             v += 1
         y += 1
     
+    # On fait 4 bandes de coordonnées autour du Héros pour faire la hitbox (qui forme un carré sans coins de 1 autour du héros)
     hitboxHorizGauche = []
     hitboxHorizDroite = []
     for y in range(coordonneesMin[1], coordonneesMax[1]+1):
@@ -136,6 +138,7 @@ def getHitBox(h):
     return hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas
 
 
+# ===== Getters =====
 def getDirection(h):
     return h.direction
 
@@ -158,6 +161,7 @@ def setDirection(h, newDirection):
     h.direction = newDirection
     return
 
+# jeu de tests
 if __name__ == "__main__":
     Unhero = createHeros()
     show(Unhero)

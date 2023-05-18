@@ -31,7 +31,6 @@ def init(data):
     data["myTimeStep"]=0.1
     data["Boules_de_feu"]={}
     data["NumeroBouleDeFeu"] = 0
-    #data["Vies"] = vies.createVies()
     data["Heros"] = heros.createHeros()
     data["Arene"] = arene.createArene()
 
@@ -67,15 +66,15 @@ def show(data):
     """
     sys.stdout.write("\033[2J")
     
-    #On affiche les différents elements
+    # == Affichage de données pour le dev ===
 
-    #vies.show(data['Vies'], data['Xmax'])
-    #arene.show(data["Arene"])
     #sys.stdout.write(str(data))
     dev_tools.showVariable("Collision", str(collision.Collision_joueur_arene(data["Heros"], data["Arene"])))
     #dev_tools.showVariable("Hitbox Arene : ", str(arene.getHitBox(data["Arene"])))
     #hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas = heros.getHitBox(data["Heros"])
     #dev_tools.showVariable("Hitbox Heros : ", str(hitboxVerticBas))
+
+    #On affiche les différents elements du jeu
 
     heros.show(data["Heros"])
     arene.show(data["Arene"])
@@ -124,9 +123,11 @@ def interact(data):
     if isDataReady():
         keys=[]
         while isDataReady():
-            # On lit ce caractère
+            # On met les caractères dans une liste qui se réinitialise a chaque dt (pour éviter la saturation)
             keys.append(sys.stdin.read(1))
+        
         # On test et compare ce caractère
+        # Caractrères de déplacement du héros
         if 'z' in keys:
             heros.setDirection(data["Heros"], "haut")
             heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
@@ -139,6 +140,8 @@ def interact(data):
         elif 'd' in keys:
             heros.setDirection(data["Heros"], "droite")
             heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
+        
+        # Caractère pour envoyer des boules de feu
         elif 'a' in keys:
             data["NumeroBouleDeFeu"] += 1
             myBoulePosition = (heros.getPosition(data["Heros"])).copy()
@@ -157,6 +160,7 @@ def isCollision(data):
             del data["Boules_de_feu"][MyBouleDeFeu]
     return
 
+'''
 # Procédure pour quitter de jeu
 def quitGame(data):
     """
@@ -188,6 +192,7 @@ def isInLife(data):
         # Ici on doit faire perdre / gagner un joueur
         pass
     return
+'''
 
 # Procédure de lancement du jeu
 def run(data):

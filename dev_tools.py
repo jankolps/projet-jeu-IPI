@@ -4,11 +4,10 @@
 # -*-   J. Lepers    -*-
 # -*-       IPI      -*-
 
+# Petit programme pour afficher des données du jeu et débuggerSS
+
 # import de module python
 import sys
-
-class dev_tool:
-    pass
 
 def showVariable(Name, Variable):
     x = 100
