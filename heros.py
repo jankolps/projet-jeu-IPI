@@ -11,7 +11,7 @@ class heros:
     pass
 
 # Fonction de création du héros
-def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,5], vitesse=[0,0], acceleration = [40, -20], isJumping=None):
+def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,5], vitesse=[0,0], acceleration = [1, -40], isJumping=None):
     myHeros = heros()
 
     # Ouverture du fichier texte contenant l'ASCII art du héros et mise dans une liste de lignes
@@ -58,11 +58,11 @@ def setVelocity(h, collision):
     if h.direction == None:
         h.vitesse[0] = 0
     elif h.direction == "haut" and collision != "haut":
-        h.vitesse[1] = 5
+        h.vitesse[1] = 15
     elif h.direction == "gauche" and collision != "gauche":
-        h.vitesse[0] = -30
+        h.vitesse[0] = -40
     elif h.direction == "droite" and collision != "droite":
-        h.vitesse[0] = 30
+        h.vitesse[0] = 40
     elif h.direction == "bas" and collision != "bas":
         h.vitesse[1] = -5
     return
@@ -89,12 +89,12 @@ def move(h, dt, collision):
         h.isJumping = True
         h.vitesse[1] += dt*(h.acceleration[1])
         h.position[1] = int(h.position[1]-dt*(h.vitesse[1]))
-    
+    '''
     # "accroupis"
     if h.direction == "bas" and collision != "bas":
         h.vitesse[1] += dt*(h.acceleration[1])
         h.position[1] = int(h.position[1]-dt*(h.vitesse[1]))
-    
+    '''
     # gravité
     if collision != "bas":
         h.vitesse[1] += dt*(h.acceleration[1])

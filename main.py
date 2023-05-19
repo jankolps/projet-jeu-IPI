@@ -190,7 +190,11 @@ def interact(data):
     else:
         # si aucune touche n'est pressée
         heros.setDirection(data["Heros"], "None")
+    
     heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
+
+    return
+
 # Procédure de lancement du jeu
 def run(data):
     #Boucle de simulation
