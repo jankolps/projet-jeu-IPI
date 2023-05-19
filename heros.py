@@ -54,23 +54,23 @@ def show(h):
     return
 
 # Procédure de réglage de la vitesse du héros
-def setVelocity(h, collision):
+def setVelocity(h, collisionArene, collisionBox):
     if h.direction == None:
         h.vitesse[0] = 0
-    elif h.direction == "haut" and not collision["haut"]:
+    elif h.direction == "haut" and not collisionArene["haut"] and not collisionBox["haut"]:
         h.vitesse[1] = 15
-    elif h.direction == "gauche" and not collision["gauche"]:
+    elif h.direction == "gauche" and not collisionArene["gauche"] and not collisionBox["gauche"]:
         h.vitesse[0] = -40
-    elif h.direction == "droite" and not collision["droite"]:
+    elif h.direction == "droite" and not collisionArene["droite"] and not collisionBox["droite"]:
         h.vitesse[0] = 40
-    elif h.direction == "bas" and not collision["bas"]:
+    elif h.direction == "bas" and not collisionArene["bas"] and not collisionBox["bas"]:
         h.vitesse[1] = -10
     return
 
 # Procédure de déplacement du héros
-def move(h, dt, collision):
+def move(h, dt, collisionArene, collisionBox):
     # déplacement gauche
-    if h.direction == "gauche" and not collision["gauche"]:
+    if h.direction == "gauche" and not collisionArene["gauche"] and not collisionBox["gauche"]:
         h.vitesse[0] += dt*(h.acceleration[0])
         if h.vitesse[0] < 0:
             h.position[0] = int(h.position[0]+dt*(h.vitesse[0]))
@@ -78,25 +78,25 @@ def move(h, dt, collision):
             h.vitesse[0] = 0
     
     # déplacement droite
-    elif h.direction == "droite" and not collision["droite"]:
+    elif h.direction == "droite" and not collisionArene["droite"] and not collisionBox["droite"]:
         h.vitesse[0] -= dt*(h.acceleration[0])
         if h.vitesse[0] > 0:
             h.position[0] = int(h.position[0]+dt*(h.vitesse[0]))
         else:
             h.vitesse[0] = 0
     # saut
-    if h.direction == "haut" and not collision["haut"] :#and h.isJumping == False:
+    if h.direction == "haut" and not collisionArene["haut"] and not collisionBox["haut"]:#and h.isJumping == False:
         h.isJumping = True
         h.vitesse[1] += dt*(h.acceleration[1])
         h.position[1] = int(h.position[1]-dt*(h.vitesse[1]))
     '''
     # "accroupis"
-    if h.direction == "bas" and not collision["bas"]:
+    if h.direction == "bas" and not collisionArene["bas"]:
         h.vitesse[1] += dt*(h.acceleration[1])
         h.position[1] = int(h.position[1]-dt*(h.vitesse[1]))
     '''
     # gravité
-    if not collision["bas"]:
+    if not collisionArene["bas"] and not collisionBox["bas"]:
         h.vitesse[1] += dt*(h.acceleration[1])
         h.position[1] = int(h.position[1]-dt*(h.vitesse[1]))
     
@@ -140,8 +140,6 @@ def getHitBox(h):
     
     return hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas
 
-
-# ===== Getters =====
 def getDirection(h):
     return h.direction
 

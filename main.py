@@ -25,6 +25,7 @@ def init(data):
     # Définition de la fenêtre de jeu
     data["Xmax"] = 150
     data["Ymax"] = 30
+
     sys.stdout.write("\x1b[8;{hauteur};{largeur}t".format(hauteur=data["Ymax"], largeur=data["Xmax"]))
 
     # creation des éléments du jeu
@@ -33,6 +34,7 @@ def init(data):
     data["NumeroBouleDeFeu"] = 0
     data["Heros"] = heros.createHeros()
     data["Arene"] = arene.createArene()
+    data["Vies1"] = vies.createVies()
 
     # Récupération du numéro du descripteur de fichier de l'entrée standard (ici zéro) / (0 = entrée standard, 1 = sortie standard, 2 = erreur standard)
     # Pour plus d'infos, lire : https://fr.wikipedia.org/wiki/Descripteur_de_fichier
@@ -69,7 +71,7 @@ def show(data):
     # == Affichage de données pour le dev ===
 
     #sys.stdout.write(str(data))
-    dev_tools.showVariable("Collision", str(collision.Collision_joueur_arene(data["Heros"], data["Arene"])))
+    dev_tools.showVariable("Collision box", str(collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"])))
     #dev_tools.showVariable("Hitbox Arene : ", str(arene.getHitBox(data["Arene"])))
     #hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas = heros.getHitBox(data["Heros"])
     #dev_tools.showVariable("Hitbox Heros : ", str(hitboxVerticBas))
@@ -78,6 +80,7 @@ def show(data):
 
     heros.show(data["Heros"])
     arene.show(data["Arene"])
+    vies.show(data["Vies1"])
 
     if data["Boules_de_feu"] != {}:
         for My_boule_de_feu in data["Boules_de_feu"]:
@@ -106,7 +109,7 @@ def move(data):
             boule_de_feu.move(data["Boules_de_feu"][My_boule_de_feu])
     
     # faire bouger le heros
-    heros.move(data["Heros"], data["myTimeStep"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
+    heros.move(data["Heros"], data["myTimeStep"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]), collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"]))
     return
 
 # Fonction permettant de tester si un caractère (touche clavier) est disponible
@@ -121,7 +124,7 @@ def isDataReady():
 def isCollision(data):
     # Si la boule de feu sort de la zone de jeu, on supprime la boule de feu
     for MyBouleDeFeu in (data["Boules_de_feu"]).copy() :
-        if not collision.isInBox(data['Boules_de_feu'][MyBouleDeFeu], data['Xmax'], data['Ymax']):
+        if not collision.isBouleInBox(data['Boules_de_feu'][MyBouleDeFeu], data['Xmax'], data['Ymax']):
             del data["Boules_de_feu"][MyBouleDeFeu]
     return
 
@@ -191,7 +194,7 @@ def interact(data):
         # si aucune touche n'est pressée
         heros.setDirection(data["Heros"], "None")
     
-    heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
+    heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]), collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"]))
 
     return
 

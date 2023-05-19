@@ -56,7 +56,7 @@ def Collision_joueur_arene(h, a):
     return Collisions
 
 # Fonction pour savoir si une boule est sortie de la zone de jeu
-def isInBox(b, Xmax, Ymax):
+def isBouleInBox(b, Xmax, Ymax):
     if b.position[0] >= Xmax or b.position[0] <= 0:
         myIsInBox = False
     elif b.position[1] >= Ymax or b.position[1] <= 0:
@@ -64,3 +64,42 @@ def isInBox(b, Xmax, Ymax):
     else:
         myIsInBox = True
     return myIsInBox
+
+# Fonction pour savoir si le héros est sortie de la zone de jeu
+def collision_Heros_Box(h, Xmax, Ymax):    
+    hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas = heros.getHitBox(h)
+    # coordonnées de l'arène
+    Collisions = {"haut":False, "bas":False, "gauche":False, "droite":False}
+
+    # On regarde si la bande horizontale gauche et l'arène ont une coordonnée en commun
+    for coordonneesHeros in hitboxHorizGauche :
+        if coordonneesHeros[0] <= 0:
+            Collisions["gauche"] = True
+            break
+        elif not Collisions["gauche"]:
+            Collisions["gauche"] = False
+        
+    # On regarde si la bande horizontale droite et l'arène ont une coordonnée en commun
+    for coordonneesHeros in hitboxHorizDroite :
+        if coordonneesHeros[0] >= Xmax:
+            Collisions["droite"] = True
+            break
+        elif not Collisions["droite"]:
+            Collisions["droite"] = False
+    
+    # On regarde si la bande verticale haute et l'arène ont une coordonnée en commun
+    for coordonneesHeros in hitboxVerticHaut :
+        if coordonneesHeros[1] <= 0:
+            Collisions["haut"] = True
+            break
+        elif not Collisions["haut"]:
+            Collisions["haut"] = False
+    
+    # On regarde si la bande verticale basse et l'arène ont une coordonnée en commun
+    for coordonneesHeros in hitboxVerticBas :
+        if coordonneesHeros[1] >= Ymax:
+            Collisions["bas"] = True
+            break
+        elif not Collisions["bas"]:
+            Collisions["bas"] = False
+    return Collisions
