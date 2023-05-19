@@ -7,11 +7,15 @@
 # import de librairies python
 import sys
 
+# import de modules crées
+import vies
+import boule_de_feu
+
 class heros:
     pass
 
 # Fonction de création du héros
-def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,5], vitesse=[0,0], acceleration = [1, -40], isJumping=None):
+def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,15], vitesse=[0,0], acceleration = [1, -40], isJumping=None):
     myHeros = heros()
 
     # Ouverture du fichier texte contenant l'ASCII art du héros et mise dans une liste de lignes
@@ -26,6 +30,7 @@ def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,5
     myHeros.vitesse = vitesse
     myHeros.acceleration = acceleration
     myHeros.isJumping = isJumping
+    myHeros.vies = vies.createVies("vies.txt", couleur, 5)
     return myHeros
 
 # Procédure d'affichage du héros

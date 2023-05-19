@@ -34,7 +34,6 @@ def init(data):
     data["NumeroBouleDeFeu"] = 0
     data["Heros"] = heros.createHeros()
     data["Arene"] = arene.createArene()
-    data["Vies1"] = vies.createVies()
 
     # Récupération du numéro du descripteur de fichier de l'entrée standard (ici zéro) / (0 = entrée standard, 1 = sortie standard, 2 = erreur standard)
     # Pour plus d'infos, lire : https://fr.wikipedia.org/wiki/Descripteur_de_fichier
@@ -71,6 +70,8 @@ def show(data):
     # == Affichage de données pour le dev ===
 
     #sys.stdout.write(str(data))
+    #for boolVal in collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"]).values():
+    #    dev_tools.showVariable("Collision box", str(boolVal))
     dev_tools.showVariable("Collision box", str(collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"])))
     #dev_tools.showVariable("Hitbox Arene : ", str(arene.getHitBox(data["Arene"])))
     #hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas = heros.getHitBox(data["Heros"])
@@ -80,7 +81,7 @@ def show(data):
 
     heros.show(data["Heros"])
     arene.show(data["Arene"])
-    vies.show(data["Vies1"])
+    vies.show(data["Heros"].vies)
 
     if data["Boules_de_feu"] != {}:
         for My_boule_de_feu in data["Boules_de_feu"]:
@@ -126,6 +127,12 @@ def isCollision(data):
     for MyBouleDeFeu in (data["Boules_de_feu"]).copy() :
         if not collision.isBouleInBox(data['Boules_de_feu'][MyBouleDeFeu], data['Xmax'], data['Ymax']):
             del data["Boules_de_feu"][MyBouleDeFeu]
+    
+    for myCollision in collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"]).values():
+        if myCollision != False:
+            data["Heros"].vies.nombre -= 1
+            data["Heros"].vitesse = [0,0]
+            data["Heros"].position = [50,17]
     return
 
 '''
@@ -210,6 +217,6 @@ def run(data):
 
 # jeu de tests
 if __name__ == "__main__":
-    data = {"Heros":None, "Arene":None, "Xmax":None, "Ymax":None,"Vies":None, "old_settings":None, "DirectionAttaques":None}
+    data = {"Heros":None, "Arene":None, "Xmax":None, "Ymax":None, "old_settings":None, "DirectionAttaques":None}
     init(data)
     run(data)
