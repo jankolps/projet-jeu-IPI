@@ -47,6 +47,7 @@ def Collision_joueur_arene(h, a):
         for coordonneesArene in HitboxArene :
             if coordonneesArene == coordonneesHeros:
                 Collision = "bas"
+                h.isJumping = False
                 break
             else:
                 Collision = "None"

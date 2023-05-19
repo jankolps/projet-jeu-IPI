@@ -11,7 +11,7 @@ class heros:
     pass
 
 # Fonction de création du héros
-def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,5], vitesse=[0,0], acceleration = [40, -20]):
+def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,5], vitesse=[0,0], acceleration = [40, -20], isJumping=None):
     myHeros = heros()
 
     # Ouverture du fichier texte contenant l'ASCII art du héros et mise dans une liste de lignes
@@ -25,6 +25,7 @@ def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,5
     myHeros.position = position
     myHeros.vitesse = vitesse
     myHeros.acceleration = acceleration
+    myHeros.isJumping = isJumping
     return myHeros
 
 # Procédure d'affichage du héros
@@ -84,7 +85,8 @@ def move(h, dt, collision):
         else:
             h.vitesse[0] = 0
     # saut
-    if h.direction == "haut" and collision != "haut":
+    if h.direction == "haut" and collision != "haut" and h.isJumping == False:
+        h.isJumping = True
         h.vitesse[1] += dt*(h.acceleration[1])
         h.position[1] = int(h.position[1]-dt*(h.vitesse[1]))
     

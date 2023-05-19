@@ -168,7 +168,7 @@ def interact(data):
     if ready:
         while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
             key = sys.stdin.read(1)
-            if key == 'z':
+            if key == 'z' and data["Heros"].isJumping == False:
                 heros.setDirection(data["Heros"], "haut")
                 data["DirectionAttaques"] = "haut"
             elif key == 's':
