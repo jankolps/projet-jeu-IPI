@@ -116,41 +116,6 @@ def isDataReady():
     """
     return select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], [])
 
-def interact(data):
-    """
-    Si une touche est appuyée (si un caractère est récupéré dans le fichier de l'entrée standard)
-    """
-    if isDataReady():
-        keys=[]
-        while isDataReady():
-            # On met les caractères dans une liste qui se réinitialise a chaque dt (pour éviter la saturation)
-            keys.append(sys.stdin.read(1))
-        
-        # On test et compare ce caractère
-        # Caractrères de déplacement du héros
-        if 'z' in keys:
-            heros.setDirection(data["Heros"], "haut")
-            heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
-        elif 's' in keys:
-            heros.setDirection(data["Heros"], "bas")
-            heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
-        elif 'q' in keys:
-            heros.setDirection(data["Heros"], "gauche")
-            heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
-        elif 'd' in keys:
-            heros.setDirection(data["Heros"], "droite")
-            heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
-        
-        # Caractère pour envoyer des boules de feu
-        elif 'a' in keys:
-            data["NumeroBouleDeFeu"] += 1
-            myBoulePosition = (heros.getPosition(data["Heros"])).copy()
-            # centrage au milieu du héros
-            myBoulePosition[0] = int(myBoulePosition[0])+4
-            myBoulePosition[1] = int(myBoulePosition[1])+2
-            myBouleDirection = heros.getDirection(data["Heros"])
-            data["Boules_de_feu"]["Boule_de_feu_"+str(data["NumeroBouleDeFeu"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, myBouleDirection,10)
-    return
 
 # Procédure de gestion des collisions
 def isCollision(data):
@@ -193,7 +158,39 @@ def isInLife(data):
         pass
     return
 '''
+def interact(data):
+    """
+    Si une touche est appuyée (si un caractère est récupéré dans le fichier de l'entrée standard)
+    """
+    #on vérifie si une touche est pressée
+    ready, _, _ = select.select([sys.stdin], [], [], 0)
 
+    if ready:
+        while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
+            key = sys.stdin.read(1)
+            if key == 'z':
+                heros.setDirection(data["Heros"], "haut")
+                data["DirectionAttaques"] = "haut"
+            elif key == 's':
+                heros.setDirection(data["Heros"], "bas")
+                data["DirectionAttaques"] = "bas"
+            elif key == 'q':
+                heros.setDirection(data["Heros"], "gauche")
+                data["DirectionAttaques"] = "gauche"
+            elif key == 'd':
+                heros.setDirection(data["Heros"], "droite")
+                data["DirectionAttaques"] = "droite"
+            elif key== 'a':
+                data["NumeroBouleDeFeu"] += 1
+                myBoulePosition = (heros.getPosition(data["Heros"])).copy()
+                # centrage au milieu du héros
+                myBoulePosition[0] = int(myBoulePosition[0])+4
+                myBoulePosition[1] = int(myBoulePosition[1])+2
+                data["Boules_de_feu"]["Boule_de_feu_"+str(data["NumeroBouleDeFeu"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["DirectionAttaques"],10)
+    else:
+        # si aucune touche n'est pressée
+        heros.setDirection(data["Heros"], "None")
+    heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]))
 # Procédure de lancement du jeu
 def run(data):
     #Boucle de simulation
@@ -206,6 +203,6 @@ def run(data):
 
 # jeu de tests
 if __name__ == "__main__":
-    data = {"Heros":None, "Arene":None, "Xmax":None, "Ymax":None,"Vies":None, "old_settings":None}
+    data = {"Heros":None, "Arene":None, "Xmax":None, "Ymax":None,"Vies":None, "old_settings":None, "DirectionAttaques":None}
     init(data)
     run(data)
