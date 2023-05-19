@@ -14,48 +14,46 @@ def Collision_joueur_arene(h, a):
     hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas = heros.getHitBox(h)
     # coordonnées de l'arène
     HitboxArene = arene.getHitBox(a)
+    Collisions = {"haut":False, "bas":False, "gauche":False, "droite":False}
 
     # On regarde si la bande horizontale gauche et l'arène ont une coordonnée en commun
     for coordonneesHeros in hitboxHorizGauche :
         for coordonneesArene in HitboxArene :
             if coordonneesArene == coordonneesHeros:
-                Collision = "gauche"
+                Collisions["gauche"] = True
                 break
-            else:
-                Collision = "None"
-        break
+            elif not Collisions["gauche"]:
+                Collisions["gauche"] = False
     
     # On regarde si la bande horizontale droite et l'arène ont une coordonnée en commun
     for coordonneesHeros in hitboxHorizDroite :
         for coordonneesArene in HitboxArene :
             if coordonneesArene == coordonneesHeros:
-                Collision = "droite"
+                Collisions["droite"] = True
                 break
-            else:
-                Collision = "None"
-        break
+            elif not Collisions["droite"]:
+                Collisions["droite"] = False
     
     # On regarde si la bande verticale haute et l'arène ont une coordonnée en commun
     for coordonneesHeros in hitboxVerticHaut :
         for coordonneesArene in HitboxArene :
             if coordonneesArene == coordonneesHeros:
-                Collision = "haut"
+                Collisions["haut"] = True
                 break
-            else:
-                Collision = "None"
-        break
+            elif not Collisions["haut"]:
+                Collisions["haut"] = False
     
     # On regarde si la bande verticale basse et l'arène ont une coordonnée en commun
     for coordonneesHeros in hitboxVerticBas :
         for coordonneesArene in HitboxArene :
             if coordonneesArene == coordonneesHeros:
-                Collision = "bas"
+                Collisions["bas"] = True
                 h.isJumping = False
                 break
-            elif Collision != "bas":
-                Collision = "None"
+            elif not Collisions["bas"]:
+                Collisions["bas"] = False
 
-    return Collision
+    return Collisions
 
 # Fonction pour savoir si une boule est sortie de la zone de jeu
 def isInBox(b, Xmax, Ymax):

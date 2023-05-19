@@ -57,20 +57,20 @@ def show(h):
 def setVelocity(h, collision):
     if h.direction == None:
         h.vitesse[0] = 0
-    elif h.direction == "haut" and collision != "haut":
+    elif h.direction == "haut" and not collision["haut"]:
         h.vitesse[1] = 15
-    elif h.direction == "gauche" and collision != "gauche":
+    elif h.direction == "gauche" and not collision["gauche"]:
         h.vitesse[0] = -40
-    elif h.direction == "droite" and collision != "droite":
+    elif h.direction == "droite" and not collision["droite"]:
         h.vitesse[0] = 40
-    elif h.direction == "bas" and collision != "bas":
-        h.vitesse[1] = -5
+    elif h.direction == "bas" and not collision["bas"]:
+        h.vitesse[1] = -10
     return
 
 # Procédure de déplacement du héros
 def move(h, dt, collision):
     # déplacement gauche
-    if h.direction == "gauche" and collision != "gauche":
+    if h.direction == "gauche" and not collision["gauche"]:
         h.vitesse[0] += dt*(h.acceleration[0])
         if h.vitesse[0] < 0:
             h.position[0] = int(h.position[0]+dt*(h.vitesse[0]))
@@ -78,27 +78,28 @@ def move(h, dt, collision):
             h.vitesse[0] = 0
     
     # déplacement droite
-    elif h.direction == "droite" and collision != "droite":
+    elif h.direction == "droite" and not collision["droite"]:
         h.vitesse[0] -= dt*(h.acceleration[0])
         if h.vitesse[0] > 0:
             h.position[0] = int(h.position[0]+dt*(h.vitesse[0]))
         else:
             h.vitesse[0] = 0
     # saut
-    if h.direction == "haut" and collision != "haut" and h.isJumping == False:
+    if h.direction == "haut" and not collision["haut"] :#and h.isJumping == False:
         h.isJumping = True
         h.vitesse[1] += dt*(h.acceleration[1])
         h.position[1] = int(h.position[1]-dt*(h.vitesse[1]))
     '''
     # "accroupis"
-    if h.direction == "bas" and collision != "bas":
+    if h.direction == "bas" and not collision["bas"]:
         h.vitesse[1] += dt*(h.acceleration[1])
         h.position[1] = int(h.position[1]-dt*(h.vitesse[1]))
     '''
     # gravité
-    if collision != "bas":
+    if not collision["bas"]:
         h.vitesse[1] += dt*(h.acceleration[1])
         h.position[1] = int(h.position[1]-dt*(h.vitesse[1]))
+    
     return
 
 
