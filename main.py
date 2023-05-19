@@ -116,10 +116,6 @@ def isDataReady():
     """
     return select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], [])
 
-import sys
-import select
-
-
 
 # Procédure de gestion des collisions
 def isCollision(data):
@@ -174,20 +170,23 @@ def interact(data):
             key = sys.stdin.read(1)
             if key == 'z':
                 heros.setDirection(data["Heros"], "haut")
+                data["DirectionAttaques"] = "haut"
             elif key == 's':
                 heros.setDirection(data["Heros"], "bas")
+                data["DirectionAttaques"] = "bas"
             elif key == 'q':
                 heros.setDirection(data["Heros"], "gauche")
+                data["DirectionAttaques"] = "gauche"
             elif key == 'd':
                 heros.setDirection(data["Heros"], "droite")
-            elif key==a:
+                data["DirectionAttaques"] = "droite"
+            elif key== 'a':
                 data["NumeroBouleDeFeu"] += 1
                 myBoulePosition = (heros.getPosition(data["Heros"])).copy()
                 # centrage au milieu du héros
                 myBoulePosition[0] = int(myBoulePosition[0])+4
                 myBoulePosition[1] = int(myBoulePosition[1])+2
-                myBouleDirection = heros.getDirection(data["Heros"])
-                data["Boules_de_feu"]["Boule_de_feu_"+str(data["NumeroBouleDeFeu"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, myBouleDirection,10)
+                data["Boules_de_feu"]["Boule_de_feu_"+str(data["NumeroBouleDeFeu"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["DirectionAttaques"],10)
     else:
         # si aucune touche n'est pressée
         heros.setDirection(data["Heros"], "None")
@@ -204,6 +203,6 @@ def run(data):
 
 # jeu de tests
 if __name__ == "__main__":
-    data = {"Heros":None, "Arene":None, "Xmax":None, "Ymax":None,"Vies":None, "old_settings":None}
+    data = {"Heros":None, "Arene":None, "Xmax":None, "Ymax":None,"Vies":None, "old_settings":None, "DirectionAttaques":None}
     init(data)
     run(data)
