@@ -23,6 +23,7 @@ def Collision_joueur_arene(h, a):
                 break
             else:
                 Collision = "None"
+        break
     
     # On regarde si la bande horizontale droite et l'arène ont une coordonnée en commun
     for coordonneesHeros in hitboxHorizDroite :
@@ -32,6 +33,7 @@ def Collision_joueur_arene(h, a):
                 break
             else:
                 Collision = "None"
+        break
     
     # On regarde si la bande verticale haute et l'arène ont une coordonnée en commun
     for coordonneesHeros in hitboxVerticHaut :
@@ -41,6 +43,7 @@ def Collision_joueur_arene(h, a):
                 break
             else:
                 Collision = "None"
+        break
     
     # On regarde si la bande verticale basse et l'arène ont une coordonnée en commun
     for coordonneesHeros in hitboxVerticBas :
@@ -49,8 +52,9 @@ def Collision_joueur_arene(h, a):
                 Collision = "bas"
                 h.isJumping = False
                 break
-            else:
+            elif Collision != "bas":
                 Collision = "None"
+
     return Collision
 
 # Fonction pour savoir si une boule est sortie de la zone de jeu
