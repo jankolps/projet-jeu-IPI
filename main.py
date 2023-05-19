@@ -30,9 +30,12 @@ def init(data):
 
     # creation des éléments du jeu
     data["myTimeStep"]=0.1
-    data["Boules_de_feu"]={}
-    data["NumeroBouleDeFeu"] = 0
-    data["Heros"] = heros.createHeros()
+    data["Boules_de_feu"]["Boules_de_feu_j1"] = {}
+    data["Boules_de_feu"]["Boules_de_feu_j2"]={}
+    data["Boules_de_feu"]["NumeroBouleDeFeu_j1"] = 0
+    data["Boules_de_feu"]["NumeroBouleDeFeu_j2"] = 0
+    data["Heros"]["Heros_j1"] = heros.createHeros("heros.txt", None, 3, [50,15], any, any, False)
+    data["Heros"]["Heros_j2"] = heros.createHeros("heros.txt", None, 0, [93,15], any, any, False)
     data["Arene"] = arene.createArene()
 
     # Récupération du numéro du descripteur de fichier de l'entrée standard (ici zéro) / (0 = entrée standard, 1 = sortie standard, 2 = erreur standard)
@@ -78,10 +81,11 @@ def show(data):
     #dev_tools.showVariable("Hitbox Heros : ", str(hitboxVerticBas))
 
     #On affiche les différents elements du jeu
-
-    heros.show(data["Heros"])
+    for myHeros in data["Heros"].values():
+        heros.show(myHeros)
     arene.show(data["Arene"])
-    vies.show(data["Heros"].vies)
+    vies.show(data["Heros_j1"].vies)
+    vies.show(data["Heros_j1"].vies)
 
     if data["Boules_de_feu"] != {}:
         for My_boule_de_feu in data["Boules_de_feu"]:
@@ -217,6 +221,6 @@ def run(data):
 
 # jeu de tests
 if __name__ == "__main__":
-    data = {"Heros":None, "Arene":None, "Xmax":None, "Ymax":None, "old_settings":None, "DirectionAttaques":None}
+    data = {"Heros":{}, "Boules_de_feu":{},"Arene":None, "Xmax":None, "Ymax":None, "old_settings":None, "DirectionAttaques":None}
     init(data)
     run(data)

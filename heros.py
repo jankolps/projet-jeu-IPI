@@ -15,7 +15,7 @@ class heros:
     pass
 
 # Fonction de création du héros
-def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,15], vitesse=[0,0], acceleration = [1, -40], isJumping=None):
+def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,15], vitesse=[0,0], acceleration = [1, -40], isJumping=False):
     myHeros = heros()
 
     # Ouverture du fichier texte contenant l'ASCII art du héros et mise dans une liste de lignes
