@@ -15,7 +15,7 @@ class heros:
     pass
 
 # Fonction de création du héros
-def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,15], vitesse=[0,0], acceleration = [1, -40], isJumping=False, positionVies=[2,28]):
+def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,15], vitesse=[0,0], acceleration = [1, -40], isJumping=False, directionAttaque=None):
     myHeros = heros()
 
     # Ouverture du fichier texte contenant l'ASCII art du héros et mise dans une liste de lignes
@@ -30,7 +30,8 @@ def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,1
     myHeros.vitesse = vitesse
     myHeros.acceleration = acceleration
     myHeros.isJumping = isJumping
-    myHeros.vies = vies.createVies("vies.txt", couleur, 5, positionVies)
+    myHeros.vies = vies.createVies("vies.txt", couleur, 5)
+    myHeros.directionAttaque = directionAttaque
     return myHeros
 
 # Procédure d'affichage du héros
@@ -155,8 +156,11 @@ def getPosition(h):
     return h.position
 
 # ===== Setters =====
-def setCorps(h, newCorps):
-    h.corps = newCorps
+def setCorps(h, newFileName):
+    with open(newFileName, "r") as file:
+        corpsEntier = file.read()
+    corpsLignes = corpsEntier.split("\n")
+    h.corps = corpsLignes
     return
 
 def setVies(h, newVies):

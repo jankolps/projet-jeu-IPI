@@ -40,3 +40,8 @@ def show(v):
     sys.stdout.write(str("Vies : "+(v.corps+" ")*v.nombre))
 
     return
+
+# ===== Setters =====
+def setPosition(v, newPosition):
+    v.position = newPosition
+    return

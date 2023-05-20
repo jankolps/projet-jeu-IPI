@@ -34,8 +34,10 @@ def init(data):
     data["Boules_de_feu"]["Boules_de_feu_j2"]= {}
     data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j1"] = 0
     data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"] = 0
-    data["Heros"]["Heros_j1"] = heros.createHeros("heros.txt", None, 3, [50,15], [0,0], [1,-40], False, [2,28])
-    data["Heros"]["Heros_j2"] = heros.createHeros("heros.txt", None, 0, [93,15], [0,0], [1,-40], False, [100, 28])
+    data["Heros"]["Heros_j1"] = heros.createHeros("herosDroite.txt", None, 3, [50,15], [0,0], [1,-40], False, "droite")
+    data["Heros"]["Heros_j2"] = heros.createHeros("herosGauche.txt", None, 0, [93,15], [0,0], [1,-40], False, "gauche")
+    vies.setPosition(data["Heros"]["Heros_j1"].vies, [2,28])
+    vies.setPosition(data["Heros"]["Heros_j1"].vies, [100, 28])
     data["Arene"] = arene.createArene()
 
     # Récupération du numéro du descripteur de fichier de l'entrée standard (ici zéro) / (0 = entrée standard, 1 = sortie standard, 2 = erreur standard)
@@ -82,6 +84,10 @@ def show(data):
 
     #On affiche les différents elements du jeu
     for myHeros in data["Heros"].values():
+        if myHeros.directionAttaque == "gauche":
+            heros.setCorps(myHeros, "herosGauche.txt")
+        elif myHeros.directionAttaque == "droite":
+            heros.setCorps(myHeros, "herosDroite.txt")
         heros.show(myHeros)
     arene.show(data["Arene"])
     vies.show(data["Heros"]["Heros_j1"].vies)
@@ -198,19 +204,19 @@ def interact(data):
             if key == 'z' and data["Heros"]["Heros_j1"].isJumping == False:
                 j1_interact = True
                 heros.setDirection(data["Heros"]["Heros_j1"], "haut")
-                data["DirectionAttaques_j1"] = "haut"
+                data["Heros"]["Heros_j1"].directionAttaque = "haut"
             elif key == 's':
                 j1_interact = True
                 heros.setDirection(data["Heros"]["Heros_j1"], "bas")
-                data["DirectionAttaques_j1"] = "bas"
+                data["Heros"]["Heros_j1"].directionAttaque = "bas"
             elif key == 'q':
                 j1_interact = True
                 heros.setDirection(data["Heros"]["Heros_j1"], "gauche")
-                data["DirectionAttaques_j1"] = "gauche"
+                data["Heros"]["Heros_j1"].directionAttaque = "gauche"
             elif key == 'd':
                 j1_interact = True
                 heros.setDirection(data["Heros"]["Heros_j1"], "droite")
-                data["DirectionAttaques_j1"] = "droite"
+                data["Heros"]["Heros_j1"].directionAttaque = "droite"
             elif key== 'a':
                 j1_interact = True
                 data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j1"] += 1
@@ -218,25 +224,25 @@ def interact(data):
                 # centrage au milieu du héros
                 myBoulePosition[0] = int(myBoulePosition[0])+4
                 myBoulePosition[1] = int(myBoulePosition[1])+2
-                data["Boules_de_feu"]["Boules_de_feu_j1"]["Boule_de_feu_"+str(data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j1"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["DirectionAttaques_j1"],data["Heros"]["Heros_j1"].couleur)
+                data["Boules_de_feu"]["Boules_de_feu_j1"]["Boule_de_feu_"+str(data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j1"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["Heros"]["Heros_j1"].directionAttaque,data["Heros"]["Heros_j1"].couleur)
             
             # contrôles du joueur 2
             if key == '8' and data["Heros"]["Heros_j2"].isJumping == False:
                 j2_interact = True
                 heros.setDirection(data["Heros"]["Heros_j2"], "haut")
-                data["DirectionAttaques_j2"] = "haut"
+                data["Heros"]["Heros_j2"].directionAttaque = "haut"
             elif key == '5':
                 j2_interact = True
                 heros.setDirection(data["Heros"]["Heros_j2"], "bas")
-                data["DirectionAttaques_j2"] = "bas"
+                data["Heros"]["Heros_j2"].directionAttaque = "bas"
             elif key == '4':
                 j2_interact = True
                 heros.setDirection(data["Heros"]["Heros_j2"], "gauche")
-                data["DirectionAttaques_j2"] = "gauche"
+                data["Heros"]["Heros_j2"].directionAttaque = "gauche"
             elif key == '6':
                 j2_interact = True
                 heros.setDirection(data["Heros"]["Heros_j2"], "droite")
-                data["DirectionAttaques_j2"] = "droite"
+                data["Heros"]["Heros_j2"].directionAttaque = "droite"
             elif key== '7':
                 j2_interact = True
                 data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"] += 1
@@ -244,7 +250,7 @@ def interact(data):
                 # centrage au milieu du héros
                 myBoulePosition[0] = int(myBoulePosition[0])+4
                 myBoulePosition[1] = int(myBoulePosition[1])+2
-                data["Boules_de_feu"]["Boules_de_feu_j2"]["Boule_de_feu_"+str(data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["DirectionAttaques_j2"], data["Heros"]["Heros_j2"].couleur)
+                data["Boules_de_feu"]["Boules_de_feu_j2"]["Boule_de_feu_"+str(data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["Heros"]["Heros_j2"].directionAttaque, data["Heros"]["Heros_j2"].couleur)
     
     elif not j2_interact:
         # si aucune touche n'est pressée
@@ -271,7 +277,7 @@ def run(data):
 
 # jeu de tests
 if __name__ == "__main__":
-    data = {"Heros":{}, "Boules_de_feu":{}, "Numeros_Boules_de_feu":{},"Arene":None, "Xmax":None, "Ymax":None, "old_settings":None, "DirectionAttaques_j1":None, "DirectionAttaques_j2":None}
+    data = {"Heros":{}, "Boules_de_feu":{}, "Numeros_Boules_de_feu":{},"Arene":None, "Xmax":None, "Ymax":None, "old_settings":None}
     init(data)
     print(str(data["Arene"]))
     print(str(data["Heros"]["Heros_j2"]))
