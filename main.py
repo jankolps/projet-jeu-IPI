@@ -34,8 +34,8 @@ def init(data):
     data["Boules_de_feu"]["Boules_de_feu_j2"]= {}
     data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j1"] = 0
     data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"] = 0
-    data["Heros"]["Heros_j1"] = heros.createHeros("heros.txt", None, 3, [50,15], [0,0], [1,-40], False)
-    data["Heros"]["Heros_j2"] = heros.createHeros("heros.txt", None, 0, [93,15], [0,0], [1,-40], False)
+    data["Heros"]["Heros_j1"] = heros.createHeros("heros.txt", None, 3, [50,15], [0,0], [1,-40], False, [2,28])
+    data["Heros"]["Heros_j2"] = heros.createHeros("heros.txt", None, 0, [93,15], [0,0], [1,-40], False, [100, 28])
     data["Arene"] = arene.createArene()
 
     # Récupération du numéro du descripteur de fichier de l'entrée standard (ici zéro) / (0 = entrée standard, 1 = sortie standard, 2 = erreur standard)
@@ -218,7 +218,7 @@ def interact(data):
                 # centrage au milieu du héros
                 myBoulePosition[0] = int(myBoulePosition[0])+4
                 myBoulePosition[1] = int(myBoulePosition[1])+2
-                data["Boules_de_feu"]["Boules_de_feu_j1"]["Boule_de_feu_"+str(data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j1"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["DirectionAttaques_j1"],10)
+                data["Boules_de_feu"]["Boules_de_feu_j1"]["Boule_de_feu_"+str(data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j1"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["DirectionAttaques_j1"],data["Heros"]["Heros_j1"].couleur)
             
             # contrôles du joueur 2
             if key == '8' and data["Heros"]["Heros_j2"].isJumping == False:
@@ -244,7 +244,7 @@ def interact(data):
                 # centrage au milieu du héros
                 myBoulePosition[0] = int(myBoulePosition[0])+4
                 myBoulePosition[1] = int(myBoulePosition[1])+2
-                data["Boules_de_feu"]["Boules_de_feu_j2"]["Boule_de_feu_"+str(data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["DirectionAttaques_j2"],10)
+                data["Boules_de_feu"]["Boules_de_feu_j2"]["Boule_de_feu_"+str(data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["DirectionAttaques_j2"], data["Heros"]["Heros_j2"].couleur)
     
     elif not j2_interact:
         # si aucune touche n'est pressée
