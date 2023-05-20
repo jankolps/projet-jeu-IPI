@@ -31,11 +31,11 @@ def init(data):
     # creation des éléments du jeu
     data["myTimeStep"]=0.1
     data["Boules_de_feu"]["Boules_de_feu_j1"] = {}
-    data["Boules_de_feu"]["Boules_de_feu_j2"]={}
-    data["Boules_de_feu"]["NumeroBouleDeFeu_j1"] = 0
-    data["Boules_de_feu"]["NumeroBouleDeFeu_j2"] = 0
-    data["Heros"]["Heros_j1"] = heros.createHeros("heros.txt", None, 3, [50,15], any, any, False)
-    data["Heros"]["Heros_j2"] = heros.createHeros("heros.txt", None, 0, [93,15], any, any, False)
+    data["Boules_de_feu"]["Boules_de_feu_j2"]= {}
+    data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j1"] = 0
+    data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"] = 0
+    data["Heros"]["Heros_j1"] = heros.createHeros("heros.txt", None, 3, [50,15], [0,0], [1,-40], False)
+    data["Heros"]["Heros_j2"] = heros.createHeros("heros.txt", None, 0, [93,15], [0,0], [1,-40], False)
     data["Arene"] = arene.createArene()
 
     # Récupération du numéro du descripteur de fichier de l'entrée standard (ici zéro) / (0 = entrée standard, 1 = sortie standard, 2 = erreur standard)
@@ -75,7 +75,7 @@ def show(data):
     #sys.stdout.write(str(data))
     #for boolVal in collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"]).values():
     #    dev_tools.showVariable("Collision box", str(boolVal))
-    dev_tools.showVariable("Collision box", str(collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"])))
+    dev_tools.showVariable("Collision box", str(collision.collision_Heros_Box(data["Heros"]["Heros_j1"], data["Xmax"], data["Ymax"])))
     #dev_tools.showVariable("Hitbox Arene : ", str(arene.getHitBox(data["Arene"])))
     #hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas = heros.getHitBox(data["Heros"])
     #dev_tools.showVariable("Hitbox Heros : ", str(hitboxVerticBas))
@@ -84,12 +84,16 @@ def show(data):
     for myHeros in data["Heros"].values():
         heros.show(myHeros)
     arene.show(data["Arene"])
-    vies.show(data["Heros_j1"].vies)
-    vies.show(data["Heros_j1"].vies)
+    vies.show(data["Heros"]["Heros_j1"].vies)
+    vies.show(data["Heros"]["Heros_j2"].vies)
 
-    if data["Boules_de_feu"] != {}:
-        for My_boule_de_feu in data["Boules_de_feu"]:
-            boule_de_feu.show(data["Boules_de_feu"][My_boule_de_feu])
+    if data["Boules_de_feu"]["Boules_de_feu_j1"] != {}:
+        for My_boule_de_feu in data["Boules_de_feu"]["Boules_de_feu_j1"]:
+            boule_de_feu.show(data["Boules_de_feu"]["Boules_de_feu_j1"][My_boule_de_feu])
+    
+    if data["Boules_de_feu"]["Boules_de_feu_j2"] != {}:
+        for My_boule_de_feu in data["Boules_de_feu"]["Boules_de_feu_j2"]:
+            boule_de_feu.show(data["Boules_de_feu"]["Boules_de_feu_j2"][My_boule_de_feu])
     """
     Restauration des couleurs du terminal
     Polices en blanc : code 37
@@ -109,12 +113,14 @@ def show(data):
 # Procédure de déplacement
 def move(data):
     # faire bouger les boules de feu
-    if data["Boules_de_feu"] != {}:
-        for My_boule_de_feu in data["Boules_de_feu"]:
-            boule_de_feu.move(data["Boules_de_feu"][My_boule_de_feu])
-    
+    for joueur_boules in data["Boules_de_feu"].values():
+        if joueur_boules != {}:
+            for My_boule_de_feu in joueur_boules:
+                boule_de_feu.move(joueur_boules[My_boule_de_feu])
+
     # faire bouger le heros
-    heros.move(data["Heros"], data["myTimeStep"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]), collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"]))
+    for myHeros in data["Heros"].values():
+        heros.move(myHeros, data["myTimeStep"], collision.Collision_joueur_arene(myHeros, data["Arene"]), collision.collision_Heros_Box(myHeros, data["Xmax"], data["Ymax"]))
     return
 
 # Fonction permettant de tester si un caractère (touche clavier) est disponible
@@ -128,15 +134,17 @@ def isDataReady():
 # Procédure de gestion des collisions
 def isCollision(data):
     # Si la boule de feu sort de la zone de jeu, on supprime la boule de feu
-    for MyBouleDeFeu in (data["Boules_de_feu"]).copy() :
-        if not collision.isBouleInBox(data['Boules_de_feu'][MyBouleDeFeu], data['Xmax'], data['Ymax']):
-            del data["Boules_de_feu"][MyBouleDeFeu]
+    for joueur_boules in data["Boules_de_feu"].values() :
+        for MyBouleDeFeu in (joueur_boules).copy() :
+            if not collision.isBouleInBox(joueur_boules[MyBouleDeFeu], data['Xmax'], data['Ymax']):
+                del joueur_boules[MyBouleDeFeu]
     
-    for myCollision in collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"]).values():
-        if myCollision != False:
-            data["Heros"].vies.nombre -= 1
-            data["Heros"].vitesse = [0,0]
-            data["Heros"].position = [50,17]
+    for myHeros in data["Heros"].values():
+        for myCollision in collision.collision_Heros_Box(myHeros, data["Xmax"], data["Ymax"]).values():
+            if myCollision != False:
+                myHeros.vies.nombre -= 1
+                myHeros.vitesse = [0,0]
+                myHeros.position = [50,17]
     return
 
 '''
@@ -179,33 +187,75 @@ def interact(data):
     #on vérifie si une touche est pressée
     ready, _, _ = select.select([sys.stdin], [], [], 0)
 
+    j1_interact = False
+    j2_interact = False
+
     if ready:
         while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
             key = sys.stdin.read(1)
-            if key == 'z' and data["Heros"].isJumping == False:
-                heros.setDirection(data["Heros"], "haut")
-                data["DirectionAttaques"] = "haut"
+
+            # contrôles du joueur 1
+            if key == 'z' and data["Heros"]["Heros_j1"].isJumping == False:
+                j1_interact = True
+                heros.setDirection(data["Heros"]["Heros_j1"], "haut")
+                data["DirectionAttaques_j1"] = "haut"
             elif key == 's':
-                heros.setDirection(data["Heros"], "bas")
-                data["DirectionAttaques"] = "bas"
+                j1_interact = True
+                heros.setDirection(data["Heros"]["Heros_j1"], "bas")
+                data["DirectionAttaques_j1"] = "bas"
             elif key == 'q':
-                heros.setDirection(data["Heros"], "gauche")
-                data["DirectionAttaques"] = "gauche"
+                j1_interact = True
+                heros.setDirection(data["Heros"]["Heros_j1"], "gauche")
+                data["DirectionAttaques_j1"] = "gauche"
             elif key == 'd':
-                heros.setDirection(data["Heros"], "droite")
-                data["DirectionAttaques"] = "droite"
+                j1_interact = True
+                heros.setDirection(data["Heros"]["Heros_j1"], "droite")
+                data["DirectionAttaques_j1"] = "droite"
             elif key== 'a':
-                data["NumeroBouleDeFeu"] += 1
-                myBoulePosition = (heros.getPosition(data["Heros"])).copy()
+                j1_interact = True
+                data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j1"] += 1
+                myBoulePosition = (heros.getPosition(data["Heros"]["Heros_j1"])).copy()
                 # centrage au milieu du héros
                 myBoulePosition[0] = int(myBoulePosition[0])+4
                 myBoulePosition[1] = int(myBoulePosition[1])+2
-                data["Boules_de_feu"]["Boule_de_feu_"+str(data["NumeroBouleDeFeu"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["DirectionAttaques"],10)
-    else:
-        # si aucune touche n'est pressée
-        heros.setDirection(data["Heros"], "None")
+                data["Boules_de_feu"]["Boules_de_feu_j1"]["Boule_de_feu_"+str(data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j1"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["DirectionAttaques_j1"],10)
+            
+            # contrôles du joueur 2
+            if key == '8' and data["Heros"]["Heros_j2"].isJumping == False:
+                j2_interact = True
+                heros.setDirection(data["Heros"]["Heros_j2"], "haut")
+                data["DirectionAttaques_j2"] = "haut"
+            elif key == '5':
+                j2_interact = True
+                heros.setDirection(data["Heros"]["Heros_j2"], "bas")
+                data["DirectionAttaques_j2"] = "bas"
+            elif key == '4':
+                j2_interact = True
+                heros.setDirection(data["Heros"]["Heros_j2"], "gauche")
+                data["DirectionAttaques_j2"] = "gauche"
+            elif key == '6':
+                j2_interact = True
+                heros.setDirection(data["Heros"]["Heros_j2"], "droite")
+                data["DirectionAttaques_j2"] = "droite"
+            elif key== '7':
+                j2_interact = True
+                data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"] += 1
+                myBoulePosition = (heros.getPosition(data["Heros"]["Heros_j2"])).copy()
+                # centrage au milieu du héros
+                myBoulePosition[0] = int(myBoulePosition[0])+4
+                myBoulePosition[1] = int(myBoulePosition[1])+2
+                data["Boules_de_feu"]["Boules_de_feu_j2"]["Boule_de_feu_"+str(data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["DirectionAttaques_j2"],10)
     
-    heros.setVelocity(data["Heros"], collision.Collision_joueur_arene(data["Heros"], data["Arene"]), collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"]))
+    elif not j2_interact:
+        # si aucune touche n'est pressée
+        heros.setDirection(data["Heros"]["Heros_j2"], "None")
+
+    elif not j1_interact:
+        # si aucune touche n'est pressée
+        heros.setDirection(data["Heros"]["Heros_j1"], "None")
+    
+    heros.setVelocity(data["Heros"]["Heros_j1"], collision.Collision_joueur_arene(data["Heros"]["Heros_j1"], data["Arene"]), collision.collision_Heros_Box(data["Heros"]["Heros_j1"], data["Xmax"], data["Ymax"]))
+    heros.setVelocity(data["Heros"]["Heros_j2"], collision.Collision_joueur_arene(data["Heros"]["Heros_j2"], data["Arene"]), collision.collision_Heros_Box(data["Heros"]["Heros_j2"], data["Xmax"], data["Ymax"]))
 
     return
 
@@ -221,6 +271,8 @@ def run(data):
 
 # jeu de tests
 if __name__ == "__main__":
-    data = {"Heros":{}, "Boules_de_feu":{},"Arene":None, "Xmax":None, "Ymax":None, "old_settings":None, "DirectionAttaques":None}
+    data = {"Heros":{}, "Boules_de_feu":{}, "Numeros_Boules_de_feu":{},"Arene":None, "Xmax":None, "Ymax":None, "old_settings":None, "DirectionAttaques_j1":None, "DirectionAttaques_j2":None}
     init(data)
+    print(str(data["Arene"]))
+    print(str(data["Heros"]["Heros_j2"]))
     run(data)
