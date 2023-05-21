@@ -34,7 +34,7 @@ def init(data):
     data["Heros"]["Heros_j1"] = heros.createHeros("herosDroite.txt", None, 3, data["Spawn1"].copy(), [0,0], [1,-40], False, "droite", data["Spawn1"].copy())
     data["Heros"]["Heros_j2"] = heros.createHeros("herosGauche.txt", None, 0, data["Spawn2"].copy(), [0,0], [1,-40], False, "gauche", data["Spawn2"].copy())
     vies.setPosition(data["Heros"]["Heros_j1"].vies, [37,28])
-    vies.setPosition(data["Heros"]["Heros_j2"].vies, [96, 28])
+    vies.setPosition(data["Heros"]["Heros_j2"].vies, [85, 28])
     data["Arene"] = arene.createArene()
 
     # Récupération du numéro du descripteur de fichier de l'entrée standard (ici zéro) / (0 = entrée standard, 1 = sortie standard, 2 = erreur standard)
@@ -141,9 +141,9 @@ def isCollision(data):
             elif data["Boules_de_feu"]["Boules_de_feu_j2"][boule].direction == "bas":
                 data["Heros"]["Heros_j1"].position[1] -= 1
             elif data["Boules_de_feu"]["Boules_de_feu_j2"][boule].direction == "gauche":
-                data["Heros"]["Heros_j1"].position[0] -= 4
+                data["Heros"]["Heros_j1"].position[0] -= 5
             elif data["Boules_de_feu"]["Boules_de_feu_j2"][boule].direction == "droite":
-                data["Heros"]["Heros_j1"].position[0] += 4
+                data["Heros"]["Heros_j1"].position[0] += 5
             data["Heros"]["Heros_j1"].vies.nombre -= 1
             del data["Boules_de_feu"]["Boules_de_feu_j2"][boule]
     
@@ -154,9 +154,9 @@ def isCollision(data):
             elif data["Boules_de_feu"]["Boules_de_feu_j1"][boule].direction == "bas":
                 data["Heros"]["Heros_j2"].position[1] -= 1
             elif data["Boules_de_feu"]["Boules_de_feu_j1"][boule].direction == "gauche":
-                data["Heros"]["Heros_j2"].position[0] -= 4
+                data["Heros"]["Heros_j2"].position[0] -= 5
             elif data["Boules_de_feu"]["Boules_de_feu_j1"][boule].direction == "droite":
-                data["Heros"]["Heros_j2"].position[0] += 4
+                data["Heros"]["Heros_j2"].position[0] += 5
             data["Heros"]["Heros_j2"].vies.nombre -= 1
             del data["Boules_de_feu"]["Boules_de_feu_j1"][boule]
     
@@ -334,8 +334,79 @@ def run(data):
         show(data)
         time.sleep(data["myTimeStep"])
 
+# Ecran de démarrage
+def start(data):
+    i=0
+    while i<3:
+        sys.stdout.write("\033[2J")
+        sys.stdout.write("\033[40m")
+        couleurPolice="\033[3"+str((data["Heros"]["Heros_j1"].couleur)%7+1)+"m"
+        sys.stdout.write(couleurPolice)
+        sys.stdout.write("\033[15;25H")
+        sys.stdout.write("Contôles du joueur 1: (z):haut, (s):bas, (q):gauche, (d):droite et (a) pour lancer une boule de feu.")
+        
+        sys.stdout.write("\033[37m")
+        sys.stdout.write("\033[40m")
+        sys.stdout.write("\033[0;0H\n")
+        
+        i += data["myTimeStep"]
+        time.sleep(data["myTimeStep"])
+    
+    i=0
+    while i<3:
+        sys.stdout.write("\033[2J")
+        sys.stdout.write("\033[40m")
+        couleurPolice="\033[3"+str((data["Heros"]["Heros_j2"].couleur)%7+1)+"m"
+        sys.stdout.write(couleurPolice)
+        sys.stdout.write("\033[15;25H")
+        sys.stdout.write("Contôles du joueur 2: (8):haut, (5):bas, (4):gauche, (6):droite et (7) pour lancer une boule de feu.")
+        
+        sys.stdout.write("\033[37m")
+        sys.stdout.write("\033[40m")
+        sys.stdout.write("\033[0;0H\n")
+        
+        i += data["myTimeStep"]
+        time.sleep(data["myTimeStep"])
+    i=0
+    while i<1:
+        sys.stdout.write("\033[2J")
+        sys.stdout.write("\033[40m")
+        couleurPolice="\033[37m"
+        sys.stdout.write(couleurPolice)
+        sys.stdout.write("\033[15;72H")
+        sys.stdout.write("Prêt ?")
+        
+        sys.stdout.write("\033[37m")
+        sys.stdout.write("\033[40m")
+        sys.stdout.write("\033[0;0H\n")
+        
+        i += data["myTimeStep"]
+        time.sleep(data["myTimeStep"])
+    
+    Counter = ["3", "2", "1"]
+
+    for nombre in Counter:
+        i=0
+        while i<1:
+            sys.stdout.write("\033[2J")
+            sys.stdout.write("\033[40m")
+            couleurPolice="\033[37m"
+            sys.stdout.write(couleurPolice)
+            sys.stdout.write("\033[15;75H")
+            sys.stdout.write(nombre)
+            
+            sys.stdout.write("\033[37m")
+            sys.stdout.write("\033[40m")
+            sys.stdout.write("\033[0;0H\n")
+            
+            i += data["myTimeStep"]
+            time.sleep(data["myTimeStep"])
+
+    return
+
 # jeu de tests
 if __name__ == "__main__":
     data = {"Heros":{}, "Boules_de_feu":{}, "Numeros_Boules_de_feu":{},"Spawn1": [41,15], "Spawn2":[101,15],"Arene":None, "Xmax":None, "Ymax":None, "old_settings":None, "Winner":None}
     init(data)
+    start(data)
     run(data)
