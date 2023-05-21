@@ -17,8 +17,6 @@ import arene
 import vies
 import collision
 import boule_de_feu
-import dev_tools
-
 # Procédure d'initalisation du jeu
 def init(data):
     # Définition de la fenêtre de jeu
