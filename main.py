@@ -6,7 +6,6 @@
 
 # import des librairies python
 import sys
-import os
 import time
 import termios
 import tty
@@ -62,25 +61,9 @@ def init(data):
 # Procédure d'affichage
 def show(data):
     """
-    rafraichissement de l'affichage
-    
-    On positionne le "curseur" à la position "zéro" en haut à gauche de la fenêtre
-    Remarque la position "zéro" vaut 1, 1
-    sys.stdout.write("\033[1;1H")
-    ou
     Nettoyage complet de l'écran (console) et repositionnement du curseur en 1, 1
     """
     sys.stdout.write("\033[2J")
-    
-    # == Affichage de données pour le dev ===
-
-    #sys.stdout.write(str(data))
-    #for boolVal in collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"]).values():
-    #    dev_tools.showVariable("Collision box", str(boolVal))
-    dev_tools.showVariable("Collsion joueur1 boule2", str(data["Heros"]["Heros_j1"].spawn))
-    #dev_tools.showVariable("Hitbox Arene : ", str(arene.getHitBox(data["Arene"])))
-    #hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas = heros.getHitBox(data["Heros"])
-    #dev_tools.showVariable("Hitbox Heros : ", str(hitboxVerticBas))
 
     #On affiche les différents elements du jeu
     for myHeros in data["Heros"].values():
@@ -191,15 +174,15 @@ def quitGame(data, joueur):
             sys.stdout.write("\033[40m")
             couleurPolice="\033[3"+str((data["Heros"]["Heros_j2"].couleur)%7+1)+"m"
             sys.stdout.write(couleurPolice)
-            sys.stdout.write("\033[" + str(30) + ";" + str(60)+"H")
+            sys.stdout.write("\033[15;60H")
             sys.stdout.write("Bravo joueur 2 ! Tu as gagné !")
             
             sys.stdout.write("\033[37m")
             sys.stdout.write("\033[40m")
             sys.stdout.write("\033[0;0H\n")
             
-            time.sleep(data["myTimeStep"])
             i += data["myTimeStep"]
+            time.sleep(data["myTimeStep"])
 
     else:
         while i<3:
@@ -207,31 +190,31 @@ def quitGame(data, joueur):
             sys.stdout.write("\033[40m")
             couleurPolice = str("\033[3"+str((data["Heros"]["Heros_j1"].couleur)%7+1)+"m")
             sys.stdout.write(couleurPolice)
-            sys.stdout.write("\033[" + str(30) + ";" + str(60)+"H")
+            sys.stdout.write("\033[15;60H")
             sys.stdout.write("Bravo joueur 1 ! Tu as gagné !")
             
             sys.stdout.write("\033[37m")
             sys.stdout.write("\033[40m")
             sys.stdout.write("\033[0;0H\n")
 
-            time.sleep(data["myTimeStep"])
             i += data["myTimeStep"]
-    
+            time.sleep(data["myTimeStep"])
+    i=0
     while i<3:
-            sys.stdout.write("\033[2J")
-            sys.stdout.write("\033[40m")
-            couleurPolice = str("\033[3"+str((data["Heros"]["Heros_j1"].couleur)%7+1)+"m")
-            sys.stdout.write(couleurPolice)
-            sys.stdout.write("\033[" + str(30) + ";" + str(65)+"H")
-            sys.stdout.write("Merci d'avoir joué.")
-            
-            sys.stdout.write("\033[37m")
-            sys.stdout.write("\033[40m")
-            sys.stdout.write("\033[0;0H\n")
+        sys.stdout.write("\033[2J")
+        sys.stdout.write("\033[40m")
+        couleurPolice = str("\033[37m")
+        sys.stdout.write(couleurPolice)
+        sys.stdout.write("\033[" + str(15) + ";" + str(65)+"H")
+        sys.stdout.write("Merci d'avoir joué.")
+        
+        sys.stdout.write("\033[37m")
+        sys.stdout.write("\033[40m")
+        sys.stdout.write("\033[0;0H\n")
 
-            time.sleep(data["myTimeStep"])
-            i += data["myTimeStep"]
-
+        i += data["myTimeStep"]
+        time.sleep(data["myTimeStep"])
+    
     """
     Restauration des couleurs du terminal
     Polices en blanc : code 37

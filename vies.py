@@ -11,7 +11,7 @@ class vies:
     pass
 
 # Procédure de création d'une vie
-def createVies(filename ="vies.txt", couleur = 5, nombre = 5, position = [2,28]):
+def createVies(filename ="vies.txt", couleur = 5, nombre = 10, position = [2,28]):
     myVies = vies()
     with open(filename, "r") as file:
         myVies.corps = file.read()

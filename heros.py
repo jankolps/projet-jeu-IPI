@@ -9,7 +9,6 @@ import sys
 
 # import de modules crées
 import vies
-import boule_de_feu
 
 class heros:
     pass
@@ -30,7 +29,7 @@ def createHeros(filename="heros.txt", direction=None, couleur=10, position=[50,1
     myHeros.vitesse = vitesse
     myHeros.acceleration = acceleration
     myHeros.isJumping = isJumping
-    myHeros.vies = vies.createVies("vies.txt", couleur, 5)
+    myHeros.vies = vies.createVies("vies.txt", couleur, 10)
     myHeros.directionAttaque = directionAttaque
     myHeros.spawn = spawn
     return myHeros
