@@ -34,10 +34,10 @@ def init(data):
     data["Boules_de_feu"]["Boules_de_feu_j2"]= {}
     data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j1"] = 0
     data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"] = 0
-    data["Heros"]["Heros_j1"] = heros.createHeros("herosDroite.txt", None, 3, [50,15], [0,0], [1,-40], False, "droite")
-    data["Heros"]["Heros_j2"] = heros.createHeros("herosGauche.txt", None, 0, [93,15], [0,0], [1,-40], False, "gauche")
-    vies.setPosition(data["Heros"]["Heros_j1"].vies, [2,28])
-    vies.setPosition(data["Heros"]["Heros_j1"].vies, [100, 28])
+    data["Heros"]["Heros_j1"] = heros.createHeros("herosDroite.txt", None, 3, data["Spawn1"].copy(), [0,0], [1,-40], False, "droite", data["Spawn1"].copy())
+    data["Heros"]["Heros_j2"] = heros.createHeros("herosGauche.txt", None, 0, data["Spawn2"].copy(), [0,0], [1,-40], False, "gauche", data["Spawn2"].copy())
+    vies.setPosition(data["Heros"]["Heros_j1"].vies, [37,28])
+    vies.setPosition(data["Heros"]["Heros_j2"].vies, [96, 28])
     data["Arene"] = arene.createArene()
 
     # Récupération du numéro du descripteur de fichier de l'entrée standard (ici zéro) / (0 = entrée standard, 1 = sortie standard, 2 = erreur standard)
@@ -77,7 +77,7 @@ def show(data):
     #sys.stdout.write(str(data))
     #for boolVal in collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"]).values():
     #    dev_tools.showVariable("Collision box", str(boolVal))
-    dev_tools.showVariable("Heros2 isJumping", str(data["Heros"]["Heros_j2"].isJumping))
+    dev_tools.showVariable("Collsion joueur1 boule2", str(data["Heros"]["Heros_j1"].spawn))
     #dev_tools.showVariable("Hitbox Arene : ", str(arene.getHitBox(data["Arene"])))
     #hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas = heros.getHitBox(data["Heros"])
     #dev_tools.showVariable("Hitbox Heros : ", str(hitboxVerticBas))
@@ -125,11 +125,11 @@ def move(data):
                 boule_de_feu.move(joueur_boules[My_boule_de_feu])
 
     # faire bouger le heros
-    for myHeros in data["Heros"].values():
-        heros.move(myHeros, data["myTimeStep"], collision.Collision_joueur_arene(myHeros, data["Arene"]), collision.collision_Heros_Box(myHeros, data["Xmax"], data["Ymax"]))
+    heros.move(data["Heros"]["Heros_j1"], data["myTimeStep"], collision.Collision_joueur_arene(data["Heros"]["Heros_j1"], data["Arene"]), collision.collision_Heros_Box(data["Heros"]["Heros_j1"], data["Xmax"], data["Ymax"]), collision.collision_j1_j2(data["Heros"]["Heros_j1"], data["Heros"]["Heros_j2"]))
+    heros.move(data["Heros"]["Heros_j2"], data["myTimeStep"], collision.Collision_joueur_arene(data["Heros"]["Heros_j2"], data["Arene"]), collision.collision_Heros_Box(data["Heros"]["Heros_j2"], data["Xmax"], data["Ymax"]), collision.collision_j1_j2(data["Heros"]["Heros_j2"], data["Heros"]["Heros_j1"]))
     return
 
-# Fonction permettant de tester si un caractère (touche clavier) est disponible
+# Fonction permettant de tester si un caractère (touche clavier) est disponible 
 def isDataReady():
     """
     On teste si un caractère est immédiatement disponible au clavier (non bloquant)
@@ -150,12 +150,88 @@ def isCollision(data):
             if myCollision != False:
                 myHeros.vies.nombre -= 1
                 myHeros.vitesse = [0,0]
-                myHeros.position = [50,17]
+                myHeros.position = myHeros.spawn.copy()
+    
+    
+    for boule in data["Boules_de_feu"]["Boules_de_feu_j2"].copy():
+        if collision.collision_joueur_bouleChars(data["Heros"]["Heros_j1"], data["Boules_de_feu"]["Boules_de_feu_j2"][boule]):
+            if data["Boules_de_feu"]["Boules_de_feu_j2"][boule].direction == "haut":
+                data["Heros"]["Heros_j1"].position[1] += 1
+            elif data["Boules_de_feu"]["Boules_de_feu_j2"][boule].direction == "bas":
+                data["Heros"]["Heros_j1"].position[1] -= 1
+            elif data["Boules_de_feu"]["Boules_de_feu_j2"][boule].direction == "gauche":
+                data["Heros"]["Heros_j1"].position[0] -= 4
+            elif data["Boules_de_feu"]["Boules_de_feu_j2"][boule].direction == "droite":
+                data["Heros"]["Heros_j1"].position[0] += 4
+            data["Heros"]["Heros_j1"].vies.nombre -= 1
+            del data["Boules_de_feu"]["Boules_de_feu_j2"][boule]
+    
+    for boule in data["Boules_de_feu"]["Boules_de_feu_j1"].copy():
+        if collision.collision_joueur_bouleChars(data["Heros"]["Heros_j2"], data["Boules_de_feu"]["Boules_de_feu_j1"][boule]):
+            if data["Boules_de_feu"]["Boules_de_feu_j1"][boule].direction == "haut":
+                data["Heros"]["Heros_j2"].position[1] += 1
+            elif data["Boules_de_feu"]["Boules_de_feu_j1"][boule].direction == "bas":
+                data["Heros"]["Heros_j2"].position[1] -= 1
+            elif data["Boules_de_feu"]["Boules_de_feu_j1"][boule].direction == "gauche":
+                data["Heros"]["Heros_j2"].position[0] -= 4
+            elif data["Boules_de_feu"]["Boules_de_feu_j1"][boule].direction == "droite":
+                data["Heros"]["Heros_j2"].position[0] += 4
+            data["Heros"]["Heros_j2"].vies.nombre -= 1
+            del data["Boules_de_feu"]["Boules_de_feu_j1"][boule]
+    
     return
 
-'''
+
 # Procédure pour quitter de jeu
-def quitGame(data):
+def quitGame(data, joueur):
+    i=0
+    if joueur == "Heros_j1":
+        while i<3:
+            sys.stdout.write("\033[2J")
+            sys.stdout.write("\033[40m")
+            couleurPolice="\033[3"+str((data["Heros"]["Heros_j2"].couleur)%7+1)+"m"
+            sys.stdout.write(couleurPolice)
+            sys.stdout.write("\033[" + str(30) + ";" + str(60)+"H")
+            sys.stdout.write("Bravo joueur 2 ! Tu as gagné !")
+            
+            sys.stdout.write("\033[37m")
+            sys.stdout.write("\033[40m")
+            sys.stdout.write("\033[0;0H\n")
+            
+            time.sleep(data["myTimeStep"])
+            i += data["myTimeStep"]
+
+    else:
+        while i<3:
+            sys.stdout.write("\033[2J")
+            sys.stdout.write("\033[40m")
+            couleurPolice = str("\033[3"+str((data["Heros"]["Heros_j1"].couleur)%7+1)+"m")
+            sys.stdout.write(couleurPolice)
+            sys.stdout.write("\033[" + str(30) + ";" + str(60)+"H")
+            sys.stdout.write("Bravo joueur 1 ! Tu as gagné !")
+            
+            sys.stdout.write("\033[37m")
+            sys.stdout.write("\033[40m")
+            sys.stdout.write("\033[0;0H\n")
+
+            time.sleep(data["myTimeStep"])
+            i += data["myTimeStep"]
+    
+    while i<3:
+            sys.stdout.write("\033[2J")
+            sys.stdout.write("\033[40m")
+            couleurPolice = str("\033[3"+str((data["Heros"]["Heros_j1"].couleur)%7+1)+"m")
+            sys.stdout.write(couleurPolice)
+            sys.stdout.write("\033[" + str(30) + ";" + str(65)+"H")
+            sys.stdout.write("Merci d'avoir joué.")
+            
+            sys.stdout.write("\033[37m")
+            sys.stdout.write("\033[40m")
+            sys.stdout.write("\033[0;0H\n")
+
+            time.sleep(data["myTimeStep"])
+            i += data["myTimeStep"]
+
     """
     Restauration des couleurs du terminal
     Polices en blanc : code 37
@@ -181,11 +257,11 @@ def quitGame(data):
 
 # Procédure de gestion des vies
 def isInLife(data):
-    if vies.getNbrVies(data["Vies"]) == 0:
-        # Ici on doit faire perdre / gagner un joueur
-        pass
+    for joueur in data["Heros"].keys():
+        if data["Heros"][joueur].vies.nombre <= 0:
+            quitGame(data, joueur)
     return
-'''
+
 def interact(data):
     """
     Si une touche est appuyée (si un caractère est récupéré dans le fichier de l'entrée standard)
@@ -261,8 +337,8 @@ def interact(data):
             # si aucune touche n'est pressée
             heros.setDirection(data["Heros"]["Heros_j1"], "None")
     
-    heros.setVelocity(data["Heros"]["Heros_j1"], collision.Collision_joueur_arene(data["Heros"]["Heros_j1"], data["Arene"]), collision.collision_Heros_Box(data["Heros"]["Heros_j1"], data["Xmax"], data["Ymax"]))
-    heros.setVelocity(data["Heros"]["Heros_j2"], collision.Collision_joueur_arene(data["Heros"]["Heros_j2"], data["Arene"]), collision.collision_Heros_Box(data["Heros"]["Heros_j2"], data["Xmax"], data["Ymax"]))
+    heros.setVelocity(data["Heros"]["Heros_j1"], collision.Collision_joueur_arene(data["Heros"]["Heros_j1"], data["Arene"]), collision.collision_Heros_Box(data["Heros"]["Heros_j1"], data["Xmax"], data["Ymax"]), collision.collision_j1_j2(data["Heros"]["Heros_j1"], data["Heros"]["Heros_j2"]))
+    heros.setVelocity(data["Heros"]["Heros_j2"], collision.Collision_joueur_arene(data["Heros"]["Heros_j2"], data["Arene"]), collision.collision_Heros_Box(data["Heros"]["Heros_j2"], data["Xmax"], data["Ymax"]), collision.collision_j1_j2(data["Heros"]["Heros_j2"], data["Heros"]["Heros_j1"]))
 
     return
 
@@ -273,13 +349,12 @@ def run(data):
         interact(data)
         move(data)
         isCollision(data)
+        isInLife(data)
         show(data)
         time.sleep(data["myTimeStep"])
 
 # jeu de tests
 if __name__ == "__main__":
-    data = {"Heros":{}, "Boules_de_feu":{}, "Numeros_Boules_de_feu":{},"Arene":None, "Xmax":None, "Ymax":None, "old_settings":None}
+    data = {"Heros":{}, "Boules_de_feu":{}, "Numeros_Boules_de_feu":{},"Spawn1": [41,15], "Spawn2":[101,15],"Arene":None, "Xmax":None, "Ymax":None, "old_settings":None, "Winner":None}
     init(data)
-    print(str(data["Arene"]))
-    print(str(data["Heros"]["Heros_j2"]))
     run(data)
