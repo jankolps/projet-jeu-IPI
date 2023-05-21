@@ -63,7 +63,7 @@ def show(h):
 def setVelocity(h, collisionArene, collisionBox):
     if h.direction == None:
         h.vitesse[0] = 0
-    elif h.direction == "haut" and not collisionArene["haut"] and not collisionBox["haut"]:
+    elif h.direction == "haut" and not collisionArene["haut"] and not collisionBox["haut"] and not h.isJumping:
         h.vitesse[1] = 15
     elif h.direction == "gauche" and not collisionArene["gauche"] and not collisionBox["gauche"]:
         h.vitesse[0] = -40
@@ -91,7 +91,7 @@ def move(h, dt, collisionArene, collisionBox):
         else:
             h.vitesse[0] = 0
     # saut
-    if h.direction == "haut" and not collisionArene["haut"] and not collisionBox["haut"]:#and h.isJumping == False:
+    if h.direction == "haut" and not collisionArene["haut"] and not collisionBox["haut"] and not h.isJumping:
         h.isJumping = True
         h.vitesse[1] += dt*(h.acceleration[1])
         h.position[1] = int(h.position[1]-dt*(h.vitesse[1]))

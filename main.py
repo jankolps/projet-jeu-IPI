@@ -77,7 +77,7 @@ def show(data):
     #sys.stdout.write(str(data))
     #for boolVal in collision.collision_Heros_Box(data["Heros"], data["Xmax"], data["Ymax"]).values():
     #    dev_tools.showVariable("Collision box", str(boolVal))
-    dev_tools.showVariable("Collision box", str(collision.collision_Heros_Box(data["Heros"]["Heros_j1"], data["Xmax"], data["Ymax"])))
+    dev_tools.showVariable("Heros2 isJumping", str(data["Heros"]["Heros_j2"].isJumping))
     #dev_tools.showVariable("Hitbox Arene : ", str(arene.getHitBox(data["Arene"])))
     #hitboxHorizGauche, hitboxHorizDroite, hitboxVerticHaut, hitboxVerticBas = heros.getHitBox(data["Heros"])
     #dev_tools.showVariable("Hitbox Heros : ", str(hitboxVerticBas))
@@ -252,13 +252,14 @@ def interact(data):
                 myBoulePosition[1] = int(myBoulePosition[1])+2
                 data["Boules_de_feu"]["Boules_de_feu_j2"]["Boule_de_feu_"+str(data["Numeros_Boules_de_feu"]["NumeroBouleDeFeu_j2"])] = boule_de_feu.createBoule_de_feu("@",myBoulePosition, data["Heros"]["Heros_j2"].directionAttaque, data["Heros"]["Heros_j2"].couleur)
     
-    elif not j2_interact:
-        # si aucune touche n'est pressée
-        heros.setDirection(data["Heros"]["Heros_j2"], "None")
+    else:
+        if not j2_interact:
+            # si aucune touche n'est pressée
+            heros.setDirection(data["Heros"]["Heros_j2"], "None")
 
-    elif not j1_interact:
-        # si aucune touche n'est pressée
-        heros.setDirection(data["Heros"]["Heros_j1"], "None")
+        if not j1_interact:
+            # si aucune touche n'est pressée
+            heros.setDirection(data["Heros"]["Heros_j1"], "None")
     
     heros.setVelocity(data["Heros"]["Heros_j1"], collision.Collision_joueur_arene(data["Heros"]["Heros_j1"], data["Arene"]), collision.collision_Heros_Box(data["Heros"]["Heros_j1"], data["Xmax"], data["Ymax"]))
     heros.setVelocity(data["Heros"]["Heros_j2"], collision.Collision_joueur_arene(data["Heros"]["Heros_j2"], data["Arene"]), collision.collision_Heros_Box(data["Heros"]["Heros_j2"], data["Xmax"], data["Ymax"]))
