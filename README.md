@@ -1,7 +1,7 @@
-# Projet jeu IPI (Initiation au projet Informatique) 2021
+# Projet jeu IPI (Initiation au projet Informatique) 2023
 
 ## Présentation
-Ce jeu est un "Super Smash Bros. like" en ASCII réalisé dans le cadre du projet IPI à l'ENIB en 2021.
+Ce jeu est un "Super Smash Bros. like" en ASCII réalisé dans le cadre du projet IPI à l'ENIB en 2023.
 
 ## Lancer le jeu
 Lancez le jeu avec la commande suivante
